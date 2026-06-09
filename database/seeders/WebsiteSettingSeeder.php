@@ -1,0 +1,41 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\WebsiteSetting;
+use Illuminate\Database\Seeder;
+
+class WebsiteSettingSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $settings = [
+            ['key' => 'site.name', 'value' => 'Badan Pendapatan dan Aset Daerah Provinsi Nusa Tenggara Timur', 'group_name' => 'site'],
+            ['key' => 'site.short_name', 'value' => 'BPAD NTT', 'group_name' => 'site'],
+            ['key' => 'site.tagline', 'value' => 'Melayani dengan transparan dan akuntabel', 'group_name' => 'site'],
+            ['key' => 'site.copyright_year', 'value' => (string) now()->year, 'group_name' => 'site'],
+            ['key' => 'hero.title', 'value' => 'Optimalisasi Pendapatan Daerah & Pengelolaan Aset', 'group_name' => 'hero'],
+            ['key' => 'hero.description', 'value' => 'Memberikan pelayanan prima dalam pengelolaan pendapatan daerah dan aset untuk mendukung pembangunan Nusa Tenggara Timur yang berkeadilan dan berkelanjutan.', 'group_name' => 'hero'],
+            ['key' => 'hero.badge.image', 'value' => '/assets/ayobangunntt.png', 'group_name' => 'hero'],
+            ['key' => 'hero.badge.alt', 'value' => 'Ayo Bangun NTT', 'group_name' => 'hero'],
+            ['key' => 'hero.slide.1', 'value' => '/assets/hero2.png', 'group_name' => 'hero'],
+            ['key' => 'hero.slide.2', 'value' => '/assets/hero3.png', 'group_name' => 'hero'],
+            ['key' => 'hero.slide.3', 'value' => '/assets/hero4.png', 'group_name' => 'hero'],
+            ['key' => 'hero.slide.4', 'value' => '/assets/hero5.png', 'group_name' => 'hero'],
+            ['key' => 'contact.email', 'value' => 'bapenda@nttprov.go.id', 'group_name' => 'contact'],
+            ['key' => 'contact.phone', 'value' => '-', 'group_name' => 'contact'],
+            ['key' => 'contact.address', 'value' => 'Jl. El Tari No.52, Oebobo, Kota Kupang', 'group_name' => 'contact'],
+            ['key' => 'contact.hours.weekday', 'value' => '07.30 - 15.30 WITA', 'group_name' => 'contact'],
+            ['key' => 'contact.hours.friday', 'value' => '07.30 - 11.30 WITA', 'group_name' => 'contact'],
+            ['key' => 'form.ppid_request.url', 'value' => 'https://forms.gle/sLJVuwdGrZnQTJ3N7', 'group_name' => 'ppid'],
+            ['key' => 'form.ppid_objection.url', 'value' => 'https://forms.gle/Us5L3Peh8N1L99iq7', 'group_name' => 'ppid'],
+        ];
+
+        foreach ($settings as $setting) {
+            WebsiteSetting::updateOrCreate(
+                ['key' => $setting['key']],
+                [...$setting, 'is_public' => true],
+            );
+        }
+    }
+}

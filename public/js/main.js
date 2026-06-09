@@ -1,0 +1,1984 @@
+// =========================================================
+// 1. Lokasi file JSON
+// =========================================================
+// Website memakai data publik dari Supabase jika tersedia.
+// File JSON hanya dipakai saat Supabase belum dikonfigurasi.
+const DATA_FILES = {
+  berita: '/api/public/posts?type=berita',
+  pengumuman: '/api/public/posts?type=pengumuman',
+  agenda: '/api/public/posts?type=agenda',
+  ppid: '/api/public/ppid-categories'
+};
+
+// =========================================================
+// 2. Data cadangan jika file JSON gagal dibaca
+// =========================================================
+// Fallback ini membuat halaman tetap berisi konten dasar saat:
+// - dibuka langsung lewat file://
+// - JSON sedang salah format
+// - koneksi ke file JSON gagal
+const FALLBACK_DATA = {
+  berita: [
+    {
+      judul: 'Pembebasan Denda PKB dalam Rangka HUT Provinsi NTT ke-66',
+      kategori: 'Pengumuman',
+      tanggal: '2026-05-15',
+      ikon: 'ti-news',
+      tema: 'blue',
+      ringkasan: 'Informasi pembebasan denda Pajak Kendaraan Bermotor bagi wajib pajak di Provinsi NTT.'
+    },
+    {
+      judul: 'BPAD NTT Raih Penghargaan Terbaik Pengelolaan Aset Daerah 2026',
+      kategori: 'Prestasi',
+      tanggal: '2026-05-08',
+      ikon: 'ti-award',
+      tema: 'green',
+      ringkasan: 'BPAD NTT memperoleh apresiasi atas peningkatan tata kelola aset daerah.'
+    },
+    {
+      judul: 'Peluncuran Sistem e-Samsat Generasi Baru untuk Kemudahan Wajib Pajak',
+      kategori: 'Inovasi',
+      tanggal: '2026-05-01',
+      ikon: 'ti-device-laptop',
+      tema: 'amber',
+      ringkasan: 'Layanan digital e-Samsat diperbarui untuk mempermudah pembayaran pajak kendaraan.'
+    }
+  ],
+  pengumuman: [],
+  agenda: [],
+  ppid: [
+    {
+      judul: 'Informasi Berkala',
+      jenis: 'Kategori PPID',
+      deskripsi: 'Profil instansi, program kerja, laporan kinerja, dan informasi publik yang diperbarui secara rutin.',
+      link: 'https://drive.google.com/drive/folders/1aLEX6QKuaZ_wDzXQDknX5IgSgD1kMX37?usp=drive_link'
+    },
+    {
+      judul: 'Informasi Setiap Saat',
+      jenis: 'Kategori PPID',
+      deskripsi: 'Daftar informasi publik, regulasi, dokumen layanan, serta data yang dapat dimohonkan masyarakat.',
+      link: 'https://drive.google.com/drive/folders/137bfjogqiqkKYvAj8lG1fyhbD0igAfyv?usp=drive_link'
+    },
+    {
+      judul: 'Permohonan Informasi',
+      jenis: 'Layanan PPID',
+      deskripsi: 'Layanan permintaan informasi publik melalui form PPID di website BPAD Provinsi NTT.',
+      link: '/ppid#ppid-permohonan'
+    }
+  ]
+};
+
+// =========================================================
+// 3. Data pejabat UPTD
+// =========================================================
+// Data ini dipakai untuk popup saat nama UPTD di tabel diklik.
+// Key harus cocok dengan teks nama wilayah di tabel UPTD.
+const UPTD_OFFICIALS = {
+  'Kota Kupang': {
+    title: 'UPTD Kota Kupang',
+    officials: [
+      { name: 'Remmy Christian Pah, S.STP, M.Si', role: 'Kepala UPTD Penda Wil. Kota Kupang' },
+      { name: '-', role: 'KTU UPTD Penda Wil. Kota Kupang' },
+      { name: 'Skolastika G. Maing, S.Sos, M.H.I', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kota Kupang' },
+      { name: "Jonny Alfreth Do'o, S.Sos, MM", role: 'Kasie Verifikasi UPTD Penda Wil. Kota Kupang' }
+    ]
+  },
+  'Kab. Kupang': {
+    title: 'UPTD Kab. Kupang',
+    officials: [
+      { name: 'Abdulgani R. Tokan, SE', role: 'Kepala UPTD Penda Wilayah Kab. Kupang' },
+      { name: 'Christian Hortono Mamulak, SH', role: 'KTU UPTD Penda Wil. Kab. Kupang' },
+      { name: 'Samuel Ndun, SE', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Kupang' },
+      { name: 'Mage Raymond Uly, S.Sos', role: 'Kasi Verifikasi UPTD Penda Wil. Kab. Kupang' }
+    ]
+  },
+  'Kab. Timor Tengah Selatan': {
+    title: 'UPTD Timor Tengah Selatan',
+    officials: [
+      { name: 'Fredik Leky, S.IP, M.Si', role: 'Kepala UPTD Penda Wil. Kab. TTS' },
+      { name: 'Petrus Naldino Nias, S.STP, MM', role: 'KTU UPTD Penda Wil. Kab. TTS' },
+      { name: 'Yuliana Maria Babys, S.Kom', role: 'Kasie Verifikasi UPTD Penda Wil. Kab. TTS' },
+      { name: 'Belandina Y. M. Nalle, SH', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. TTS' }
+    ]
+  },
+  'Kab. Timor Tengah Utara': {
+    title: 'UPTD Timor Tengah Utara',
+    officials: [
+      { name: 'Alberd E. Pairikas, SE, M.Si', role: 'Kepala UPTD Penda Wil. Kab. TTU' },
+      { name: 'Bernadetha Salem, SH', role: 'KTU UPTD Penda Wil. Kab. TTU' },
+      { name: 'Putu P. A. Sujana, S.Si.T', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. TTU' },
+      { name: 'Yohanes Jago, S.Sos', role: 'Kasie Verifikasi UPTD Penda Wil. Kab. TTU' }
+    ]
+  },
+  'Kab. Belu': {
+    title: 'UPTD Belu',
+    officials: [
+      { name: 'Stanis Laus Moat, S.STP, M.Si', role: 'Kepala UPTD Penda Wil. Kab. Belu' },
+      { name: 'Crispim Pereira Leo Soro, S.STP, M.M', role: 'KTU UPTD Penda Wil. Kab. Belu' },
+      { name: 'Margaritha Kolo Tadoe, SP', role: 'Kasie Verifikasi UPTD Penda Wil. Kab. Belu' },
+      { name: 'Zaitun Harun, S.Kom', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Belu' }
+    ]
+  },
+  'Kab. Rote Ndao': {
+    title: 'UPTD Rote Ndao',
+    officials: [
+      { name: 'Petrus A. Manehat, S.Sos', role: 'Kepala UPTD Penda Wil. Kab. Rote Ndao' },
+      { name: 'Apris Imanuel Suan, S.Sos', role: 'KTU UPTD Penda Wil. Kab. Rote Ndao' },
+      { name: 'Ganna Dedo Ngara, S.Sos', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Rote Ndao' },
+      { name: 'Yohanis Talan, S.IP', role: 'Kasi Verifikasi UPTD Penda Wil. Kab. Rote Ndao' }
+    ]
+  },
+  'Kab. Flores Timur': {
+    title: 'UPTD Flotim',
+    officials: [
+      { name: 'Yohanes Boro Hali, SE', role: 'Kepala UPTD Penda Wilayah Kab. Flotim' },
+      { name: 'Yeremias Padja, S.Sos', role: 'KTU UPTD Penda Wil. Kab. Flotim' },
+      { name: 'Fransiskus X. Seli Tokan, SE', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Flotim' },
+      { name: 'Juniati Maria Maumabe, S.STP', role: 'Kasie Verifikasi UPTD Penda Wil. Kab. Flotim' }
+    ]
+  },
+  'Kab. Lembata': {
+    title: 'UPTD Lembata',
+    officials: [
+      { name: 'Oskar Ola Samon, S.Sos', role: 'Kepala UPTD Penda Wil. Kab. Lembata' },
+      { name: 'Clementinus Berino, S.Ag', role: 'KTU UPTD Penda Wil. Kab. Lembata' },
+      { name: 'Mahyudin Rais, SE', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Lembata' },
+      { name: 'Paulina Pantaleon, S.Pt', role: 'Kasi Verifikasi UPTD Penda Wil. Kab. Lembata' }
+    ]
+  },
+  'Kab. Sikka': {
+    title: 'UPTD Sikka',
+    officials: [
+      { name: 'Maria Wilfrida Basilika, SE', role: 'Kepala UPTD Penda Wilayah Kab. Sikka' },
+      { name: 'Andreas Dolu, S.ST', role: 'KTU UPTD Penda Wil. Kab. Sikka' },
+      { name: 'Bibiana Bertarika Finolince, S.Kom', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Sikka' },
+      { name: 'Josephine Natalia Seran, SE', role: 'Kasi Verifikasi UPTD Penda Wil. Kab. Sikka' }
+    ]
+  },
+  'Kab. Ende': {
+    title: 'UPTD Ende',
+    officials: [
+      { name: 'Alponsus Yuli, SE', role: 'Kepala UPTD Penda Wilayah Kab. Ende' },
+      { name: 'Vinsensius Ferdinand Sare, S.Fil', role: 'KTU UPTD Penda Wil. Kab. Ende' },
+      { name: 'Emanuel Laga, S.Hut', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Ende' },
+      { name: 'Leonemsius Sedu, S.Pi', role: 'Kasie Verifikasi UPTD Penda Wil. Kab. Ende' }
+    ]
+  },
+  'Kab. Nagekeo': {
+    title: 'UPTD Nagekeo',
+    officials: [
+      { name: 'Yoseph Marianus Yegho, SE', role: 'Kepala UPTD Penda Wil. Kab. Nagekeo' },
+      { name: 'Arnoldus Gradus Wudalina, S.STP', role: 'Kasubag TU UPTD Penda Wil. Kab. Nagekeo' },
+      { name: 'Yasintha K. Kowe Toa, S.Hut', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Nagekeo' },
+      { name: 'Yohanes Paulus Mite, SP', role: 'Kasie Verifikasi UPTD Penda Wil. Kab. Nagekeo' }
+    ]
+  },
+  'Kab. Ngada': {
+    title: 'UPTD Ngada',
+    officials: [
+      { name: 'Anna Maria Belang, SP', role: 'Kepala UPTD Penda Wil. Kab. Ngada' },
+      { name: 'Yovita Harsiani Almi, SE', role: 'KTU UPTD Penda Wil. Kab. Ngada' },
+      { name: 'Maria Goreti Meo, SE', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Ngada' },
+      { name: '-', role: 'Kasie Verifikasi UPTD Penda Wil. Kab. Ngada' }
+    ]
+  },
+  'Kab. Manggarai Timur': {
+    title: 'UPTD Manggarai Timur',
+    officials: [
+      { name: 'Stanislaus K. Jawan, S.Sos, M.AP', role: 'Kepala UPTD Penda Wilayah Kab. Manggarai Timur' },
+      { name: 'Mariana Ch. P. W. Kellen, SE', role: 'KTU UPTD Penda Wil. Kab. Matim' },
+      { name: 'Fransiskus Siap, S.IP', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Matim' },
+      { name: '-', role: 'Kasie Verifikasi UPTD Penda Wil. Kab. Manggarai Timur' }
+    ]
+  },
+  'Kab. Manggarai Barat': {
+    title: 'UPTD Manggarai Barat',
+    officials: [
+      { name: 'Martianus T.A. Pranda, S.Sos, M.Si', role: 'Kepala UPTD Penda Wilayah Kab. Manggarai Barat' },
+      { name: 'Benediktus Gempur, SE', role: 'KTU UPTD Penda Wil. Kab. Mabar' },
+      { name: 'Frederikus E. Daeng, S.STP', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Mabar' },
+      { name: 'Sanusi, SE', role: 'Kasie Verifikasi UPTD Penda Wil. Kab. Manggarai Barat' }
+    ]
+  },
+  'Kab. Manggarai': {
+    title: 'UPTD Manggarai',
+    officials: [
+      { name: 'Lorensius Agung, SP', role: 'Kepala UPTD Penda Wil. Kab. Manggarai' },
+      { name: 'Sebastianus Nggudari Jama', role: 'KTU UPTD Penda Wil. Kab. Manggarai' },
+      { name: 'Maria Rosa Mstyca Snak, SE', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Manggarai' },
+      { name: 'Anita Primadewi Gael, SE', role: 'Kasie Verifikasi UPTD Penda Wil. Kab. Manggarai' }
+    ]
+  },
+  'Kab. Sumba Timur': {
+    title: 'UPTD Sumba Timur',
+    officials: [
+      { name: 'Denny Semuel Sandy, SH', role: 'Kepala UPTD Penda Wil. Kab. Sumba Timur' },
+      { name: 'Dorince Ina Bili, S.Pd', role: 'Kasubag TU UPTD Penda Wil. Kab. Sumba Timur' },
+      { name: 'Elisabeth Kahi Oy, SH', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Sumba Timur' },
+      { name: 'Rosalin A. Radjah Gah, A.Md', role: 'Kasie Verifikasi UPTD Penda Wil. Kab. Sumba Timur' }
+    ]
+  },
+  'Kab. Sumba Tengah': {
+    title: 'UPTD Sumba Tengah',
+    officials: [
+      { name: 'Yohanis Umbu Sakayu, S.Sos', role: 'Kepala UPTD Penda Wilayah Kab. Sumba Tengah' },
+      { name: 'Kristianus Roni Tobu, ST', role: 'KTU UPTD Penda Wil. Kab. Sumba Tengah' },
+      { name: 'Agus Umbu Tauwa, SH', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Sumba Tengah' },
+      { name: 'Antonius Wilhelmus Leu, SE', role: 'Kasi Verifikasi UPTD Penda Wil. Kab. Sumba Tengah' }
+    ]
+  },
+  'Kab. Sumba Barat': {
+    title: 'UPTD Sumba Barat',
+    officials: [
+      { name: 'Kristoforus Jogo Ja, SH', role: 'Kepala UPTD Penda Wilayah Kab. Sumba Barat' },
+      { name: 'Christina Lodong, SH', role: 'KTU UPTD Penda Wil. Kab. Sumba Barat' },
+      { name: 'Maria L.E. Betris Noemay, A.Md', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Sumba Barat' },
+      { name: 'Yosef Tamu Bapa Dolo, S.STP', role: 'Kasi Verifikasi UPTD Penda Wil. Kab. Sumba Barat' }
+    ]
+  },
+  'Kab. Sumba Barat Daya': {
+    title: 'UPTD Sumba Barat Daya',
+    officials: [
+      { name: 'Ermelinda P.R. Bita, S.IP, M.Si', role: 'Kepala UPTD Penda Wil. Kab. SBD' },
+      { name: 'Hermanus Mete, S.Hut', role: 'KTU UPTD Penda Wil. Kab. SBD' },
+      { name: 'Pegiar Efedi J. Mulik, S.Sos', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Sumba Barat Daya' },
+      { name: 'Josefus B. Patnono, S.Sos', role: 'Kasi Verifikasi UPTD Penda Wil. Kab. SBD' }
+    ]
+  },
+  'Kab. Alor': {
+    title: 'UPTD Alor',
+    officials: [
+      { name: 'Cornelis Daniel Adoe, S.Sos', role: 'Kepala UPTD Penda Wil. Kab. Alor' },
+      { name: 'Dewi Setiawati Moka, S.STP', role: 'KTU UPTD Penda Wil. Kab. Alor' },
+      { name: 'Ramlah H. Nahrawi, SE, MM', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Alor' },
+      { name: 'Herlina K. Peringsy, SE', role: 'Kasie Verifikasi UPTD Penda Wil. Kab. Alor' }
+    ]
+  },
+  'Kab. Malaka': {
+    title: 'UPTD Malaka',
+    officials: [
+      { name: 'Clara Maria F. Bano, SE', role: 'Kepala UPTD Penda Wilayah Kab. Malaka' },
+      { name: 'Chrisantus Reynaldi Diding, S.STP', role: 'KTU UPTD Penda Wil. Kab. Malaka' },
+      { name: 'Philipus Lip Tatut, S.Fil', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Malaka' },
+      { name: 'Francisco M. Cipriano, SH', role: 'Kasi Verifikasi UPTD Pendapatan Daerah Wil. Kab. Malaka di Betun' }
+    ]
+  },
+  'Kab. Sabu Raijua': {
+    title: 'UPTD Sabu Raijua',
+    officials: [
+      { name: 'Marcurius Heraclitus Bani Haba, SH', role: 'Kepala UPTD Penda Wil. Kab. Sabu Raijua' },
+      { name: 'Ferdy Alfonsus Pajikana, SE', role: 'KTU UPTD Penda Wil. Kab. Sabu Raijua' },
+      { name: 'Johanis Bunga, ST', role: 'Kasie Penetapan & Penagihan UPTD Penda Wil. Kab. Sabu Raijua' },
+      { name: 'Dance Hawula, SH', role: 'Kasi Verifikasi UPTD Penda Wil. Kab. Sabu Raijua' }
+    ]
+  }
+};
+
+const PPID_DUMMY_DOCUMENTS = [
+  {
+    id: 'lra-2025',
+    title: 'Laporan Realisasi Anggaran 2025',
+    category: 'Berkala',
+    year: '2025',
+    format: 'PDF',
+    size: '2.4 MB',
+    updatedAt: '2026-01-18',
+    description: 'Ringkasan realisasi anggaran BPAD NTT untuk kebutuhan informasi berkala.',
+    source: 'Supabase',
+    url: '#preview-laporan-realisasi-anggaran-2025'
+  },
+  {
+    id: 'dip-2025',
+    title: 'DIP BPAD 2025',
+    category: 'DIP',
+    year: '2025',
+    format: 'PDF',
+    size: '1.1 MB',
+    updatedAt: '2025-12-30',
+    description: 'Daftar Informasi Publik BPAD NTT tahun 2025.',
+    source: 'Google Drive',
+    url: '#preview-dip-bpad-2025'
+  },
+  {
+    id: 'sop-permohonan',
+    title: 'SOP Permohonan Informasi',
+    category: 'SOP',
+    year: '2026',
+    format: 'PDF',
+    size: '860 KB',
+    updatedAt: '2026-02-04',
+    description: 'Standar operasional pelayanan permohonan informasi publik.',
+    source: 'Google Drive',
+    url: '#preview-sop-permohonan-informasi'
+  },
+  {
+    id: 'maklumat-pelayanan',
+    title: 'Maklumat Pelayanan',
+    category: 'Serta Merta',
+    year: '2026',
+    format: 'PDF',
+    size: '540 KB',
+    updatedAt: '2026-03-12',
+    description: 'Maklumat pelayanan informasi publik BPAD NTT untuk masyarakat.',
+    source: 'Supabase',
+    url: '#preview-maklumat-pelayanan'
+  }
+];
+
+// =========================================================
+// 4. Helper format tanggal
+// =========================================================
+// Input dari JSON memakai format YYYY-MM-DD.
+// Fungsi ini mengubahnya menjadi format Indonesia,
+// contoh: 2026-05-18 -> 18 Mei 2026.
+function formatTanggal(value) {
+  if (!value) return '';
+
+  return new Intl.DateTimeFormat('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }).format(new Date(`${value}T00:00:00`));
+}
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function getSafeUrl(value, fallback = '', options = {}) {
+  const source = String(value ?? '').trim();
+  if (!source || /[\u0000-\u001F\u007F]/.test(source)) return fallback;
+
+  if (/^(https?:)?\/\//i.test(source)) return source;
+  if (options.allowContactSchemes && /^(mailto|tel):/i.test(source)) return source;
+  if (options.allowDataImage && /^data:image\/(?:png|jpe?g|gif|webp);base64,/i.test(source)) return source;
+  if (source.startsWith('#') || source.startsWith('/') || source.startsWith('./') || source.startsWith('../')) return source;
+
+  if (/^[a-z][a-z0-9+.-]*:/i.test(source)) return fallback;
+  return source;
+}
+
+function getSafeHref(value, fallback = '#') {
+  return getSafeUrl(value, fallback, { allowContactSchemes: true });
+}
+
+function getSafeImageUrl(value, fallback = '') {
+  return getSafeUrl(value, fallback, { allowDataImage: true });
+}
+
+function getSafeIconClass(value, fallback = 'ti-news') {
+  const icon = String(value ?? '').trim();
+  return /^ti-[a-z0-9-]+$/i.test(icon) ? icon : fallback;
+}
+
+function sortByTanggalDesc(items) {
+  return [...items].sort((a, b) => {
+    const dateA = a?.tanggal ? new Date(`${a.tanggal}T00:00:00`).getTime() : 0;
+    const dateB = b?.tanggal ? new Date(`${b.tanggal}T00:00:00`).getTime() : 0;
+    return dateB - dateA;
+  });
+}
+
+// =========================================================
+// 5. Helper ambil data JSON
+// =========================================================
+// `Date.now()` dipakai sebagai cache-buster supaya browser
+// membaca file JSON terbaru setelah file diedit.
+async function loadJson(path) {
+  const separator = path.includes('?') ? '&' : '?';
+  const response = await fetch(`${path}${separator}v=${Date.now()}`, { cache: 'no-store' });
+  if (!response.ok) throw new Error(`Gagal memuat ${path}`);
+  return response.json();
+}
+
+// =========================================================
+// 6. Helper class warna
+// =========================================================
+// Contoh:
+// getThemeClass('bt', 'blue') menjadi 'btblue'
+// getThemeClass('tag-', 'green') menjadi 'tag-green'
+function getThemeClass(prefix, theme, fallback = 'blue') {
+  const value = String(theme || fallback).trim();
+  const safeTheme = /^[a-z0-9-]+$/i.test(value) ? value : fallback;
+  return `${prefix}${safeTheme}`;
+}
+
+function isFrontPageContext() {
+  const path = String(window.location.pathname || '').toLowerCase();
+  return path.endsWith('/index.html') || path.endsWith('/') || path === '';
+}
+
+function getNewsDetailText(item) {
+  if (!item || typeof item !== 'object') return '';
+
+  const primaryText = [
+    item.isi,
+    item.content,
+    item.detail,
+    item.body
+  ].find((value) => String(value || '').trim().length > 0);
+
+  if (primaryText) {
+    return String(primaryText).trim();
+  }
+
+  const fallbackText = String(item.ringkasan || item.summary || '').trim();
+  if (fallbackText) return fallbackText;
+
+  return 'Informasi detail berita belum tersedia. Silakan cek pembaruan berikutnya dari BPAD NTT.';
+}
+
+function canOpenNewsDetail(item) {
+  return Boolean(item && String(item.judul || item.title || '').trim());
+}
+
+function getNewsImageSource(item) {
+  const source = String(item?.gambar || item?.image || item?.cover_image || '').trim();
+  return getSafeImageUrl(source, '/assets/logo.png') || '/assets/logo.png';
+}
+
+function refreshBodyScrollLock() {
+  const hasOpenModal = Boolean(document.querySelector(
+    '.news-detail-modal.open, .ppid-link-modal.open, .gallery-modal.open, .uptd-modal.open'
+  ));
+  document.body.classList.toggle('modal-open', hasOpenModal);
+}
+
+function buildNewsDetailModal() {
+  const modal = document.createElement('div');
+  modal.className = 'news-detail-modal';
+  modal.id = 'newsDetailModal';
+  modal.setAttribute('aria-hidden', 'true');
+
+  const card = document.createElement('div');
+  card.className = 'news-detail-modal-card';
+  card.setAttribute('role', 'dialog');
+  card.setAttribute('aria-modal', 'true');
+  card.setAttribute('aria-labelledby', 'newsDetailModalTitle');
+
+  const head = document.createElement('div');
+  head.className = 'news-detail-head';
+
+  const titleWrap = document.createElement('div');
+  const label = document.createElement('div');
+  label.className = 'news-detail-label';
+  label.textContent = 'Detail Berita';
+
+  const title = document.createElement('h3');
+  title.id = 'newsDetailModalTitle';
+
+  const meta = document.createElement('div');
+  meta.className = 'news-detail-meta';
+  meta.id = 'newsDetailModalMeta';
+
+  const closeButton = document.createElement('button');
+  closeButton.className = 'news-detail-close';
+  closeButton.type = 'button';
+  closeButton.setAttribute('aria-label', 'Tutup popup berita');
+  closeButton.innerHTML = '<i class="ti ti-x"></i>';
+  closeButton.addEventListener('click', closeNewsDetailModal);
+
+  titleWrap.append(label, title, meta);
+  head.append(titleWrap, closeButton);
+
+  const content = document.createElement('div');
+  content.className = 'news-detail-content';
+
+  const text = document.createElement('div');
+  text.className = 'news-detail-text';
+  text.id = 'newsDetailModalContent';
+
+  const imageWrap = document.createElement('div');
+  imageWrap.className = 'news-detail-image-wrap';
+  const image = document.createElement('img');
+  image.id = 'newsDetailModalImage';
+  image.alt = 'Gambar berita';
+  image.loading = 'lazy';
+  imageWrap.appendChild(image);
+
+  content.append(text, imageWrap);
+  card.append(head, content);
+  modal.append(card);
+  document.body.appendChild(modal);
+
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) closeNewsDetailModal();
+  });
+
+  return modal;
+}
+
+function openNewsDetailModal(item) {
+  if (!canOpenNewsDetail(item)) return false;
+
+  const modal = document.getElementById('newsDetailModal') || buildNewsDetailModal();
+  const title = modal.querySelector('#newsDetailModalTitle');
+  const meta = modal.querySelector('#newsDetailModalMeta');
+  const body = modal.querySelector('#newsDetailModalContent');
+  const image = modal.querySelector('#newsDetailModalImage');
+  const detailText = getNewsDetailText(item);
+
+  title.textContent = item.judul || item.title || 'Berita BPAD';
+  const dateValue = item.tanggal || item.date || '';
+
+  meta.textContent = [
+    item.kategori || item.category || 'Berita',
+    dateValue ? formatTanggal(dateValue) : ''
+  ].filter(Boolean).join(' · ');
+  body.textContent = detailText;
+  image.src = getNewsImageSource(item);
+  image.alt = title.textContent || 'Gambar berita';
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  refreshBodyScrollLock();
+
+  return true;
+}
+
+function closeNewsDetailModal() {
+  const modal = document.getElementById('newsDetailModal');
+  if (!modal) return;
+
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  refreshBodyScrollLock();
+}
+
+function bindBeritaCardDetailPopup(items) {
+  const cards = document.querySelectorAll('#beritaGrid .berita-card');
+  if (!cards.length) return;
+
+  cards.forEach((card, index) => {
+    const item = items[index];
+    const canOpen = isFrontPageContext() && canOpenNewsDetail(item);
+
+    card.classList.toggle('has-detail', canOpen);
+    card.classList.toggle('no-detail', !canOpen);
+    card.tabIndex = canOpen ? 0 : -1;
+
+    if (!canOpen) return;
+
+    const openDetail = () => openNewsDetailModal(item);
+    card.addEventListener('click', openDetail);
+    card.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openDetail();
+      }
+    });
+  });
+}
+
+window.BPADNewsModal = {
+  canOpen: canOpenNewsDetail,
+  open: openNewsDetailModal,
+  close: closeNewsDetailModal,
+  getText: getNewsDetailText,
+  getImage: getNewsImageSource
+};
+
+// =========================================================
+// 7. Render daftar berita
+// =========================================================
+// Fungsi ini mengambil data dari berita.json lalu membuat
+// kartu berita ke dalam elemen #beritaGrid di index.html.
+function renderBerita(items) {
+  const container = document.getElementById('beritaGrid');
+  if (!container) return;
+  const list = Array.isArray(items) ? items : [];
+
+  if (!list.length) {
+    container.innerHTML = '<div class="berita-empty">Belum ada berita dari database.</div>';
+    return;
+  }
+
+  container.innerHTML = list.map((item) => `
+    <div class="berita-card">
+      <div class="berita-thumb ${getThemeClass('bt', item.tema)}">
+        <i class="ti ${getSafeIconClass(item.ikon)}"></i>
+      </div>
+      <div class="berita-body">
+        <span class="berita-tag ${getThemeClass('tag-', item.tema)}">${escapeHtml(item.kategori || 'Berita')}</span>
+        <div class="berita-title">${escapeHtml(item.judul)}</div>
+        <p class="berita-summary">${escapeHtml(item.ringkasan || '')}</p>
+        <div class="berita-date"><i class="ti ti-calendar"></i> ${escapeHtml(formatTanggal(item.tanggal))}</div>
+      </div>
+    </div>
+  `).join('');
+
+  bindBeritaCardDetailPopup(list);
+  highlightBeritaFromUrl();
+  openBeritaFromUrl(list);
+}
+
+function openBeritaFromUrl(items) {
+  const slug = new URLSearchParams(window.location.search).get('slug');
+  if (!slug) return;
+
+  const item = items.find((candidate) => {
+    if (String(candidate?.slug || '') === slug) return true;
+    return String(candidate?.link || '').endsWith(`/${slug}`);
+  });
+
+  if (item) {
+    window.requestAnimationFrame(() => openNewsDetailModal(item));
+  }
+}
+
+function renderBeritaLoading(count = 3) {
+  const container = document.getElementById('beritaGrid');
+  if (!container) return;
+
+  container.innerHTML = Array.from({ length: count }).map(() => `
+    <div class="berita-card berita-loading-card" aria-hidden="true">
+      <div class="berita-loading-thumb loading-shimmer"></div>
+      <div class="berita-body">
+        <span class="berita-loading-tag loading-shimmer"></span>
+        <div class="berita-loading-title loading-shimmer"></div>
+        <div class="berita-loading-line loading-shimmer"></div>
+        <div class="berita-loading-line short loading-shimmer"></div>
+        <div class="berita-loading-date loading-shimmer"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// =========================================================
+// 8. Render daftar pengumuman
+// =========================================================
+// Fungsi ini mengambil data dari pengumuman.json lalu membuat
+// daftar pengumuman ke dalam elemen #pengumumanList.
+function renderPengumuman(items, options = {}) {
+  const container = document.getElementById('pengumumanList');
+  if (!container) return;
+  const list = Array.isArray(items) ? sortByTanggalDesc(items) : [];
+
+  if (!list.length) {
+    container.innerHTML = `
+      <li class="pgm-empty ${options.loading ? 'is-loading' : ''}" ${options.loading ? 'role="status" aria-live="polite"' : ''}>${options.loading ? 'Memuat pengumuman dari database...' : 'Belum ada pengumuman resmi dari database.'}</li>
+    `;
+    return;
+  }
+
+  container.innerHTML = list.map((item) => `
+    <li class="pgm-item">
+      <div class="pgm-dot"></div>
+      <div class="pgm-content">
+        <div class="pgm-title">${escapeHtml(item.judul)}</div>
+        <div class="pgm-date">${escapeHtml(formatTanggal(item.tanggal))}</div>
+      </div>
+    </li>
+  `).join('');
+}
+
+// =========================================================
+// 9. Render daftar agenda kegiatan
+// =========================================================
+// Fungsi ini mengambil data dari agenda.json lalu membuat
+// daftar agenda ke dalam elemen #agendaList.
+function renderAgenda(items, options = {}) {
+  const container = document.getElementById('agendaList');
+  if (!container) return;
+  const list = Array.isArray(items) ? sortByTanggalDesc(items) : [];
+
+  if (!list.length) {
+    container.innerHTML = `
+      <li class="pgm-empty ${options.loading ? 'is-loading' : ''}" ${options.loading ? 'role="status" aria-live="polite"' : ''}>${options.loading ? 'Memuat agenda dari database...' : 'Belum ada agenda kegiatan dari database.'}</li>
+    `;
+    return;
+  }
+
+  container.innerHTML = list.map((item) => `
+    <li class="pgm-item">
+      <div class="pgm-dot"></div>
+      <div class="pgm-content">
+        <div class="pgm-title">${escapeHtml(item.judul)}</div>
+        <div class="pgm-date">${escapeHtml(formatTanggal(item.tanggal))}</div>
+      </div>
+    </li>
+  `).join('');
+}
+
+// =========================================================
+// 10. Render daftar PPID
+// =========================================================
+// Fungsi ini mengambil data dari ppid.json lalu membuat
+// kartu PPID ke dalam elemen #ppidGrid.
+// Jika field `link` diisi, tombol Google Drive akan muncul.
+function renderPpid(items) {
+  const container = document.getElementById('ppidGrid');
+  if (!container) return;
+  const list = Array.isArray(items) ? items : [];
+
+  if (!list.length) {
+    container.innerHTML = '<div class="detail-card"><div class="detail-label">PPID</div><h3>Belum ada kategori PPID dari database.</h3><p>Isi data PPID melalui database atau web settings publik.</p></div>';
+    return;
+  }
+
+  container.innerHTML = list.map((item) => {
+    const title = String(item.judul || '');
+    const isForm = title === 'Permohonan Informasi';
+    const href = getSafeHref(item.link, '');
+    const icon = isForm ? 'ti-forms' : 'ti-brand-google-drive';
+    const actionText = isForm ? 'Isi Formulir' : 'Buka Link Google Drive';
+
+    return `
+    <div class="detail-card">
+      <div class="detail-label">${escapeHtml(item.jenis || 'PPID')}</div>
+      <h3>${escapeHtml(title)}</h3>
+      <p>${escapeHtml(item.deskripsi || '')}</p>
+      ${href ? `<a class="doc-link ppid-link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer"><i class="ti ${icon}"></i> ${actionText}</a>` : ''}
+    </div>
+  `;
+  }).join('');
+}
+
+function renderPpidDocumentRows(documents) {
+  const container = document.getElementById('ppidDocumentRows');
+  if (!container) return;
+
+  if (!documents.length) {
+    container.innerHTML = `
+      <tr>
+        <td class="ppid-empty-row" colspan="5">Dokumen tidak ditemukan untuk filter ini.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  container.innerHTML = documents.map((doc) => `
+    <tr>
+      <td>
+        <div class="ppid-doc-title">
+          <strong>${escapeHtml(doc.title)}</strong>
+          <span>Update ${formatTanggal(doc.updatedAt)} - ${escapeHtml(doc.size)}</span>
+        </div>
+      </td>
+      <td><span class="ppid-doc-badge">${escapeHtml(doc.category)}</span></td>
+      <td>${escapeHtml(doc.year)}</td>
+      <td>${escapeHtml(doc.format)}</td>
+      <td>
+        <div class="ppid-doc-actions">
+          <button type="button" data-ppid-preview="${escapeHtml(doc.id)}"><i class="ti ti-eye"></i> Preview</button>
+          <a href="${escapeHtml(getSafeHref(doc.url, '#dokumen-belum-tersedia'))}" data-ppid-download="${escapeHtml(doc.id)}"><i class="ti ti-download"></i> Download</a>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderPpidPreview(doc) {
+  const panel = document.getElementById('ppidPreviewPanel');
+  if (!panel) return;
+
+  if (!doc) {
+    panel.innerHTML = `
+      <span class="ppid-panel-label">Preview Dokumen</span>
+      <h3>Belum ada dokumen PPID dari database.</h3>
+      <p>Tambahkan dokumen publik di tabel web_ppid_documents agar tampil di sini.</p>
+    `;
+    return;
+  }
+
+  panel.innerHTML = `
+    <span class="ppid-panel-label">Preview Dokumen</span>
+    <h3>${escapeHtml(doc.title)}</h3>
+    <p>${escapeHtml(doc.description)}</p>
+    <div class="ppid-preview-meta">
+      <span><strong>Kategori:</strong> ${escapeHtml(doc.category)}</span>
+      <span><strong>Tahun:</strong> ${escapeHtml(doc.year)}</span>
+      <span><strong>Format:</strong> ${escapeHtml(doc.format)} - ${escapeHtml(doc.size)}</span>
+      <span><strong>Sumber:</strong> ${escapeHtml(doc.source)}</span>
+    </div>
+  `;
+}
+
+function initPpidGoogleFormLinks() {
+  document.querySelectorAll('[data-ppid-form-link]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      const href = link.getAttribute('href') || '';
+      if (!href || href === '#' || href.startsWith('#form-')) {
+        event.preventDefault();
+        window.alert('Link Google Form ini belum diisi. Update melalui web settings sesuai key yang tertulis di kartu form.');
+      }
+    });
+  });
+}
+
+async function initPpidPortal() {
+  const rows = document.getElementById('ppidDocumentRows');
+  if (!rows) return;
+
+  const hasPublicData = Boolean(window.BPADPublicData?.enabled);
+  const initialDocuments = Array.isArray(window.BPAD_PPID_INITIAL_DOCUMENTS)
+    ? window.BPAD_PPID_INITIAL_DOCUMENTS
+    : null;
+  let ppidDocuments = initialDocuments ? [...initialDocuments] : (hasPublicData ? [] : PPID_DUMMY_DOCUMENTS);
+
+  const searchInput = document.getElementById('ppidDocSearch');
+  const yearFilter = document.getElementById('ppidYearFilter');
+  const categoryFilter = document.getElementById('ppidCategoryFilter');
+  const categoryButtons = document.querySelectorAll('[data-ppid-category]');
+  const navCategoryLinks = document.querySelectorAll('[data-ppid-nav-category]');
+
+  renderPpidDocumentRows(ppidDocuments);
+  renderPpidPreview(ppidDocuments[0]);
+  initPpidGoogleFormLinks();
+
+  const applyFilters = () => {
+    const query = String(searchInput?.value || '').trim().toLowerCase();
+    const year = String(yearFilter?.value || '');
+    const category = String(categoryFilter?.value || '');
+
+    const filtered = ppidDocuments.filter((doc) => {
+      const searchable = `${doc.title} ${doc.category} ${doc.year} ${doc.description}`.toLowerCase();
+      return (!query || searchable.includes(query))
+        && (!year || doc.year === year)
+        && (!category || doc.category === category);
+    });
+
+    categoryButtons.forEach((button) => {
+      button.classList.toggle('is-active', Boolean(category && button.dataset.ppidCategory === category));
+    });
+    renderPpidDocumentRows(filtered);
+  };
+
+  if (hasPublicData) {
+    window.BPADPublicData.getPpidDocuments()
+      .then((supabaseDocuments) => {
+        if (Array.isArray(supabaseDocuments)) {
+          ppidDocuments = supabaseDocuments;
+          applyFilters();
+          renderPpidPreview(ppidDocuments[0] || null);
+        }
+      })
+      .catch((error) => {
+        console.warn(error);
+        ppidDocuments = initialDocuments ? [...initialDocuments] : [];
+        applyFilters();
+        renderPpidPreview(ppidDocuments[0] || null);
+      });
+  }
+
+  searchInput?.addEventListener('input', applyFilters);
+  yearFilter?.addEventListener('change', applyFilters);
+  categoryFilter?.addEventListener('change', applyFilters);
+
+  categoryButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      if (categoryFilter) categoryFilter.value = button.dataset.ppidCategory || '';
+      applyFilters();
+      document.getElementById('ppid-dokumen')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  navCategoryLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      if (categoryFilter) categoryFilter.value = link.dataset.ppidNavCategory || '';
+      window.setTimeout(applyFilters, 0);
+    });
+  });
+
+  rows.addEventListener('click', (event) => {
+    const previewButton = event.target.closest('[data-ppid-preview]');
+    const downloadLink = event.target.closest('[data-ppid-download]');
+
+    if (previewButton) {
+      const doc = ppidDocuments.find((item) => item.id === previewButton.dataset.ppidPreview);
+      renderPpidPreview(doc);
+      return;
+    }
+
+    if (downloadLink) {
+      const doc = ppidDocuments.find((item) => item.id === downloadLink.dataset.ppidDownload);
+      renderPpidPreview(doc);
+      if (!doc?.url || doc.url.startsWith('#')) {
+        event.preventDefault();
+        window.alert('File dokumen belum ditautkan. Nanti isi drive_url atau preview_url di tabel web_ppid_documents.');
+      }
+    }
+  });
+
+}
+
+// =========================================================
+// 11. Jalankan proses pengisian konten
+// =========================================================
+// Saat Supabase aktif, database menjadi sumber utama termasuk kondisi kosong.
+// Fallback JSON hanya dipakai saat Supabase tidak dikonfigurasi.
+async function hydrateContent() {
+  const hasPublicData = Boolean(window.BPADPublicData?.enabled);
+  let publicSettings = null;
+  let settingsPromise = Promise.resolve(null);
+
+  if (hasPublicData) {
+    renderBeritaLoading();
+    renderPengumuman(FALLBACK_DATA.pengumuman, { loading: true });
+    renderAgenda(FALLBACK_DATA.agenda, { loading: true });
+    renderPpid([]);
+  } else {
+    renderBerita(FALLBACK_DATA.berita);
+    renderPengumuman(FALLBACK_DATA.pengumuman);
+    renderAgenda(FALLBACK_DATA.agenda);
+    renderPpid(FALLBACK_DATA.ppid);
+  }
+
+  if (hasPublicData) {
+    settingsPromise = window.BPADPublicData.getSettingsMap()
+      .catch((error) => {
+        console.warn(error);
+        return null;
+      });
+
+    const [settingsDb, beritaDb, pengumumanDb, agendaDb] = await Promise.all([
+      settingsPromise,
+      window.BPADPublicData.getBerita().catch((error) => {
+        console.warn(error);
+        return [];
+      }),
+      window.BPADPublicData.getPengumuman().catch((error) => {
+        console.warn(error);
+        return [];
+      }),
+      window.BPADPublicData.getAgenda().catch((error) => {
+        console.warn(error);
+        return [];
+      })
+    ]);
+
+    if (settingsDb) {
+      publicSettings = settingsDb;
+      applyPublicSettings(settingsDb);
+    }
+
+    renderBerita(Array.isArray(beritaDb) ? beritaDb : []);
+    renderPengumuman(Array.isArray(pengumumanDb) ? pengumumanDb : []);
+    renderAgenda(Array.isArray(agendaDb) ? agendaDb : []);
+  } else {
+    try {
+      renderBerita(await loadJson(DATA_FILES.berita));
+    } catch (error) {
+      console.warn(error);
+    }
+
+    try {
+      renderPengumuman(await loadJson(DATA_FILES.pengumuman));
+    } catch (error) {
+      console.warn(error);
+    }
+
+    try {
+      renderAgenda(await loadJson(DATA_FILES.agenda));
+    } catch (error) {
+      console.warn(error);
+    }
+
+    try {
+      renderPpid(await loadJson(DATA_FILES.ppid));
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+
+  if (!publicSettings) {
+    publicSettings = await settingsPromise;
+  }
+
+  if (publicSettings) {
+    applyPublicSettings(publicSettings);
+  }
+}
+
+function getSetting(settings, key) {
+  const value = settings?.[key];
+  if (value === null || value === undefined) return '';
+  return String(value).trim();
+}
+
+function applySettingText(selector, value) {
+  if (!value) return;
+  document.querySelectorAll(selector).forEach((element) => {
+    element.textContent = value;
+  });
+}
+
+function applySettingTextPreservingIcon(element, value) {
+  if (!element || !value) return;
+
+  const icons = Array.from(element.children).filter((child) => child.tagName === 'I');
+  if (!icons.length) {
+    element.textContent = value;
+    return;
+  }
+
+  element.textContent = '';
+  icons.forEach((icon) => {
+    element.appendChild(icon);
+    element.appendChild(document.createTextNode(' '));
+  });
+  element.appendChild(document.createTextNode(value));
+}
+
+function applySettingImage(selector, src, alt) {
+  const safeSrc = getSafeImageUrl(src, '');
+  if (!safeSrc) return;
+  document.querySelectorAll(selector).forEach((image) => {
+    image.setAttribute('src', safeSrc);
+    if (alt) image.setAttribute('alt', alt);
+  });
+}
+
+function applySettingHref(selector, href) {
+  const safeHref = getSafeHref(href, '');
+  if (!safeHref) return;
+  document.querySelectorAll(selector).forEach((element) => {
+    element.setAttribute('href', safeHref);
+  });
+}
+
+function applySettingHrefByKey(key, href, label) {
+  const safeHref = getSafeHref(href, '');
+  if (!key || !safeHref) return;
+  document.querySelectorAll(`[data-setting-href="${key}"]`).forEach((anchor) => {
+    anchor.setAttribute('href', safeHref);
+    if (label) applySettingTextPreservingIcon(anchor, label);
+  });
+}
+
+function applyConfiguredLink({ labels = [], hrefs = [], href, label }) {
+  const knownLabels = new Set([label, ...labels].filter(Boolean));
+  const knownHrefs = new Set([href, ...hrefs].filter(Boolean));
+  const safeHref = getSafeHref(href, '');
+
+  document.querySelectorAll('a').forEach((anchor) => {
+    const anchorText = anchor.textContent.trim();
+    const anchorHref = anchor.getAttribute('href') || '';
+    const matchesLabel = knownLabels.has(anchorText);
+    const matchesHref = knownHrefs.has(anchorHref);
+
+    if (!matchesLabel && !matchesHref) return;
+
+    if (safeHref) anchor.setAttribute('href', safeHref);
+    if (label && anchorText) applySettingTextPreservingIcon(anchor, label);
+  });
+}
+
+function applyFooterImage(src) {
+  const source = getSafeImageUrl(src, '');
+  if (!source) return;
+
+  const safeSrc = source.replace(/["\\]/g, '');
+  let style = document.getElementById('publicSettingsFooterImage');
+  if (!style) {
+    style = document.createElement('style');
+    style.id = 'publicSettingsFooterImage';
+    document.head.appendChild(style);
+  }
+
+  style.textContent = `
+    footer::before {
+      background:
+        linear-gradient(90deg, rgba(6,18,32,.96) 0%, rgba(10,30,51,.9) 46%, rgba(10,30,51,.78) 100%),
+        url("${safeSrc}") center / cover no-repeat;
+    }
+  `;
+}
+
+function applyPadSettings(settings) {
+  const targetYear = getSetting(settings, 'pad.target_year');
+  const targetValue = getSetting(settings, 'pad.target_value_text');
+  const targetLabel = getSetting(settings, 'pad.target_label');
+  const todayLabel = getSetting(settings, 'pad.today_label');
+  const skmScore = getSetting(settings, 'pad.skm_score');
+  const skmYear = getSetting(settings, 'pad.skm_year');
+  const skmNote = getSetting(settings, 'pad.skm_note');
+
+  if (todayLabel) {
+    document.querySelectorAll('.pad-today-head strong').forEach((element) => {
+      element.textContent = todayLabel;
+    });
+  }
+
+  if (targetValue || targetYear) {
+    document.querySelectorAll('.pad-today-line span').forEach((element) => {
+      if (!element.textContent.trim().startsWith('Target')) return;
+      const label = targetYear ? `Target ${targetYear}` : 'Target';
+      const value = targetValue || element.querySelector('strong')?.textContent || '';
+      element.innerHTML = `${escapeHtml(label)}: <strong>${escapeHtml(value)}</strong>`;
+    });
+  }
+
+  const statItems = document.querySelectorAll('.stats-strip .stat-item');
+  const targetStat = statItems[0];
+  const skmStat = statItems[3];
+
+  if (targetStat) {
+    if (targetValue) targetStat.querySelector('.stat-num').textContent = targetValue;
+    if (targetLabel) targetStat.querySelector('.stat-label').textContent = targetLabel;
+  }
+
+  if (skmStat) {
+    if (skmScore) skmStat.querySelector('.stat-num').textContent = skmScore;
+    const note = skmStat.querySelector('.stat-note');
+    if (note && skmNote) note.textContent = skmNote;
+    if (note && skmYear && !skmNote) note.textContent = `Berdasarkan Laporan SKM ${skmYear}`;
+  }
+}
+
+function applyPpidSettings(settings) {
+  const ppidMappings = [
+    {
+      oldTitle: 'Informasi Berkala',
+      title: getSetting(settings, 'ppid.informasi_berkala.name'),
+      href: getSetting(settings, 'ppid.informasi_berkala.drive_url')
+    },
+    {
+      oldTitle: 'Informasi Setiap Saat',
+      title: getSetting(settings, 'ppid.informasi_setiap_saat.name'),
+      href: getSetting(settings, 'ppid.informasi_setiap_saat.drive_url')
+    }
+  ];
+
+  ppidMappings.forEach((item) => {
+    document.querySelectorAll('#ppidGrid .detail-card').forEach((card) => {
+      const heading = card.querySelector('h3');
+      if (!heading) return;
+      const currentTitle = heading.textContent.trim();
+      if (currentTitle !== item.oldTitle && currentTitle !== item.title) return;
+
+      if (item.title) heading.textContent = item.title;
+      const safeHref = getSafeHref(item.href, '');
+      if (safeHref) card.querySelector('a.doc-link')?.setAttribute('href', safeHref);
+    });
+  });
+}
+
+function applySocialSettings(settings) {
+  const instagramUrl = getSetting(settings, 'social.instagram_url');
+  const safeInstagramUrl = getSafeHref(instagramUrl, '');
+  if (!safeInstagramUrl) return;
+
+  document.querySelectorAll('a[href*="instagram.com/bpad_ntt"]').forEach((anchor) => {
+    anchor.setAttribute('href', safeInstagramUrl);
+  });
+}
+
+function applyPublicSettings(settings) {
+  if (!settings || typeof settings !== 'object') return;
+
+  window.BPAD_PUBLIC_SETTINGS = settings;
+  window.dispatchEvent(new CustomEvent('bpad:settings-loaded', { detail: settings }));
+
+  const siteName = getSetting(settings, 'site.name');
+  const siteShortName = getSetting(settings, 'site.short_name');
+  const siteTitle = getSetting(settings, 'site.title');
+  const siteTagline = getSetting(settings, 'site.tagline');
+  const siteDescription = getSetting(settings, 'site.description');
+  const copyrightYear = getSetting(settings, 'site.copyright_year');
+
+  if (siteTitle) document.title = siteTitle;
+  applySettingText('.logo-text h1', siteShortName || siteName);
+  applySettingText('.logo-text p', siteTagline);
+  applySettingText('.footer-brand h4', siteShortName || siteName);
+  applySettingText('.footer-brand p', siteDescription || siteName);
+  applySettingImage('.logo-img img, .footer-brand img', getSetting(settings, 'site.logo'), siteShortName || siteName);
+  applySettingImage('.hero-badge img', getSetting(settings, 'site.hero_logo'));
+  applySettingHref('link[rel="icon"]', getSetting(settings, 'site.favicon'));
+  applySettingHref('link[rel="apple-touch-icon"]', getSetting(settings, 'site.favicon'));
+  applyFooterImage(getSetting(settings, 'site.footer_image'));
+
+  if (copyrightYear || siteName) {
+    document.querySelectorAll('.footer-bottom > p:first-child').forEach((element) => {
+      const year = copyrightYear || new Date().getFullYear();
+      const name = siteName || 'Badan Pendapatan dan Aset Daerah Provinsi Nusa Tenggara Timur';
+      element.textContent = `© ${year} ${name}`;
+    });
+  }
+
+  if (getSetting(settings, 'office.address_short')) {
+    document.querySelectorAll('.topbar-right span').forEach((element) => {
+      if (!element.querySelector('.ti-map-pin')) return;
+      const icon = element.querySelector('.ti-map-pin');
+      element.textContent = getSetting(settings, 'office.address_short');
+      element.prepend(icon);
+      element.insertBefore(document.createTextNode(' '), icon.nextSibling);
+    });
+  }
+
+  if (getSetting(settings, 'office.service_hours')) {
+    document.querySelectorAll('.topbar-right span, .footer-col p').forEach((element) => {
+      if (!element.textContent.includes('Senin')) return;
+      applySettingTextPreservingIcon(element, getSetting(settings, 'office.service_hours'));
+    });
+  }
+
+  if (getSetting(settings, 'office.address')) {
+    document.querySelectorAll('.info-block p, .footer-col p').forEach((element) => {
+      if (element.textContent.includes('Jl. El Tari')) {
+        element.textContent = getSetting(settings, 'office.address');
+      }
+    });
+  }
+
+  if (getSetting(settings, 'office.maps_embed_url')) {
+    const safeMapsEmbedUrl = getSafeUrl(getSetting(settings, 'office.maps_embed_url'), '');
+    document.querySelectorAll('iframe[title="Peta Lokasi BPAD NTT"]').forEach((iframe) => {
+      if (safeMapsEmbedUrl) iframe.setAttribute('src', safeMapsEmbedUrl);
+    });
+  }
+
+  if (getSetting(settings, 'office.maps_link')) {
+    const safeMapsLink = getSafeHref(getSetting(settings, 'office.maps_link'), '');
+    document.querySelectorAll('a.map-link').forEach((anchor) => {
+      if (safeMapsLink) anchor.setAttribute('href', safeMapsLink);
+    });
+  }
+
+  applyConfiguredLink({
+    labels: ['Magang Hub'],
+    hrefs: ['https://magangbpad.netlify.app/'],
+    href: getSetting(settings, 'app.magang_hub.url'),
+    label: getSetting(settings, 'app.magang_hub.name')
+  });
+  applyConfiguredLink({
+    labels: ['Pro NTT'],
+    hrefs: ['https://play.google.com/store/apps/details?id=com.iwana.betantt&hl=id'],
+    href: getSetting(settings, 'app.pro_ntt.url'),
+    label: getSetting(settings, 'app.pro_ntt.name')
+  });
+  applyConfiguredLink({
+    labels: ['Kastau Tim Siber'],
+    hrefs: ['https://research.ihsanmokhsen.com/kastau-tim-siber-landing.html'],
+    href: getSetting(settings, 'app.kastau_tim_siber.url'),
+    label: getSetting(settings, 'app.kastau_tim_siber.name')
+  });
+  applyConfiguredLink({
+    labels: ['Kotak Saran (SKM)'],
+    hrefs: ['https://forms.gle/z5ru8iL955ekdrmK7'],
+    href: getSetting(settings, 'form.kotak_saran_skm.url'),
+    label: getSetting(settings, 'form.kotak_saran_skm.name')
+  });
+  applyConfiguredLink({
+    labels: ['Buku Tamu'],
+    hrefs: ['https://forms.gle/Us5L3Peh8N1L99iq7'],
+    href: getSetting(settings, 'form.buku_tamu.url'),
+    label: getSetting(settings, 'form.buku_tamu.name')
+  });
+  applyConfiguredLink({
+    labels: ['Instagram BPAD NTT'],
+    hrefs: ['https://www.instagram.com/bpad_ntt/'],
+    href: getSetting(settings, 'social.instagram_url')
+  });
+  applySettingHrefByKey(
+    'form.ppid_request.url',
+    getSetting(settings, 'form.ppid_request.url'),
+    getSetting(settings, 'form.ppid_request.name')
+  );
+  applySettingHrefByKey(
+    'form.ppid_objection.url',
+    getSetting(settings, 'form.ppid_objection.url'),
+    getSetting(settings, 'form.ppid_objection.name')
+  );
+
+  applyPadSettings(settings);
+  applyPpidSettings(settings);
+  applySocialSettings(settings);
+}
+
+// =========================================================
+// 12. Popup konfirmasi link PPID
+// =========================================================
+// Link PPID diarahkan ke luar website. Popup ini memberi tahu
+// pengguna tujuan link sebelum membuka dokumen Google Drive.
+function buildPpidLinkModal() {
+  const modal = document.createElement('div');
+  modal.className = 'ppid-link-modal';
+  modal.id = 'ppidLinkModal';
+  modal.setAttribute('aria-hidden', 'true');
+
+  const card = document.createElement('div');
+  card.className = 'ppid-link-modal-card';
+  card.setAttribute('role', 'dialog');
+  card.setAttribute('aria-modal', 'true');
+  card.setAttribute('aria-labelledby', 'ppidLinkModalTitle');
+
+  const icon = document.createElement('div');
+  icon.className = 'ppid-link-modal-icon';
+  icon.innerHTML = '<i class="ti ti-external-link"></i>';
+
+  const title = document.createElement('h3');
+  title.id = 'ppidLinkModalTitle';
+
+  const message = document.createElement('p');
+  message.id = 'ppidLinkModalMessage';
+
+  const actions = document.createElement('div');
+  actions.className = 'ppid-link-modal-actions';
+
+  const cancelButton = document.createElement('button');
+  cancelButton.className = 'ppid-link-cancel';
+  cancelButton.type = 'button';
+  cancelButton.textContent = 'Batal';
+  cancelButton.addEventListener('click', closePpidLinkModal);
+
+  const continueButton = document.createElement('button');
+  continueButton.className = 'ppid-link-continue';
+  continueButton.type = 'button';
+  continueButton.textContent = 'Lanjutkan';
+  continueButton.addEventListener('click', () => {
+    const url = continueButton.dataset.url;
+    closePpidLinkModal();
+    if (url) window.open(url, '_blank', 'noopener');
+  });
+
+  actions.append(cancelButton, continueButton);
+  card.append(icon, title, message, actions);
+  modal.append(card);
+  document.body.appendChild(modal);
+
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) closePpidLinkModal();
+  });
+
+  return modal;
+}
+
+function openPpidLinkModal(link) {
+  const card = link.closest('.detail-card');
+  const itemTitle = card?.querySelector('h3')?.textContent?.trim() || 'Informasi PPID';
+  const itemDescription = card?.querySelector('p')?.textContent?.trim() || 'dokumen atau layanan informasi publik BPAD NTT';
+  const isForm = link.textContent.includes('Isi Formulir') || link.hash === '#ppid-permohonan';
+  const modal = document.getElementById('ppidLinkModal') || buildPpidLinkModal();
+  const title = modal.querySelector('#ppidLinkModalTitle');
+  const message = modal.querySelector('#ppidLinkModalMessage');
+  const continueButton = modal.querySelector('.ppid-link-continue');
+
+  title.textContent = isForm ? 'Isi Formulir Permohonan Informasi' : `Buka ${itemTitle}`;
+  message.textContent = isForm
+    ? 'Anda akan dialihkan untuk mengisi formulir Permohonan Informasi. Pastikan data yang diisi benar sebelum formulir dikirim.'
+    : `Anda akan dialihkan ke Google Drive yang berisi ${itemTitle.toLowerCase()}: ${itemDescription}`;
+  continueButton.dataset.url = link.href;
+  continueButton.textContent = isForm ? 'Isi Formulir' : 'Buka Google Drive';
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  refreshBodyScrollLock();
+}
+
+function closePpidLinkModal() {
+  const modal = document.getElementById('ppidLinkModal');
+  if (!modal) return;
+
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  refreshBodyScrollLock();
+}
+
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('.ppid-link');
+  if (!link) return;
+
+  event.preventDefault();
+  openPpidLinkModal(link);
+});
+
+// =========================================================
+// 12. Popup Galeri Instagram
+// =========================================================
+// Galeri kegiatan belum dibuat sebagai halaman terpisah. Untuk saat ini
+// tombol Galeri membuka popup penjelasan, lalu mengarahkan pengguna
+// ke Instagram resmi BPAD NTT yang berisi dokumentasi kegiatan terbaru.
+const GALLERY_INSTAGRAM_URL = 'https://www.instagram.com/bpad_ntt/';
+
+function buildGalleryModal() {
+  const modal = document.createElement('div');
+  modal.className = 'gallery-modal';
+  modal.id = 'galleryModal';
+  modal.setAttribute('aria-hidden', 'true');
+
+  const card = document.createElement('div');
+  card.className = 'gallery-modal-card';
+  card.setAttribute('role', 'dialog');
+  card.setAttribute('aria-modal', 'true');
+  card.setAttribute('aria-labelledby', 'galleryModalTitle');
+
+  const icon = document.createElement('div');
+  icon.className = 'gallery-modal-icon';
+  icon.innerHTML = '<i class="ti ti-brand-instagram"></i>';
+
+  const eyebrow = document.createElement('span');
+  eyebrow.className = 'gallery-modal-eyebrow';
+  eyebrow.textContent = 'Galeri Kegiatan';
+
+  const title = document.createElement('h3');
+  title.id = 'galleryModalTitle';
+  title.textContent = 'Lihat Kegiatan Terbaru BPAD NTT';
+
+  const message = document.createElement('p');
+  message.textContent = 'Anda akan diarahkan ke Instagram resmi BPAD NTT yang berisi dokumentasi kegiatan, publikasi layanan, dan informasi terbaru dari BPAD Provinsi Nusa Tenggara Timur.';
+
+  const actions = document.createElement('div');
+  actions.className = 'gallery-modal-actions';
+
+  const closeButton = document.createElement('button');
+  closeButton.className = 'gallery-close';
+  closeButton.type = 'button';
+  closeButton.textContent = 'Tutup';
+  closeButton.addEventListener('click', closeGalleryModal);
+
+  const instagramButton = document.createElement('button');
+  instagramButton.className = 'gallery-open-instagram';
+  instagramButton.type = 'button';
+  instagramButton.innerHTML = '<i class="ti ti-brand-instagram"></i> Buka Instagram BPAD NTT';
+  instagramButton.addEventListener('click', () => {
+    closeGalleryModal();
+    window.open(GALLERY_INSTAGRAM_URL, '_blank', 'noopener');
+  });
+
+  actions.append(closeButton, instagramButton);
+  card.append(icon, eyebrow, title, message, actions);
+  modal.append(card);
+  document.body.appendChild(modal);
+
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) closeGalleryModal();
+  });
+
+  return modal;
+}
+
+function openGalleryModal() {
+  const modal = document.getElementById('galleryModal') || buildGalleryModal();
+
+  document.getElementById('mobileMenu')?.classList.remove('open');
+  document.getElementById('appDropdown')?.classList.remove('open');
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  refreshBodyScrollLock();
+}
+
+function closeGalleryModal() {
+  const modal = document.getElementById('galleryModal');
+  if (!modal) return;
+
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  refreshBodyScrollLock();
+}
+
+// =========================================================
+// 13. Popup pejabat UPTD
+// =========================================================
+// Nama UPTD di tabel dibuat bisa diklik. Saat diklik, detail
+// pejabat UPTD akan muncul di modal tanpa pindah halaman.
+function findUptdKey(text) {
+  return Object.keys(UPTD_OFFICIALS)
+    .sort((a, b) => b.length - a.length)
+    .find((key) => text.includes(key));
+}
+
+function buildUptdModal() {
+  const modal = document.createElement('div');
+  modal.className = 'uptd-modal';
+  modal.id = 'uptdModal';
+  modal.setAttribute('aria-hidden', 'true');
+
+  const card = document.createElement('div');
+  card.className = 'uptd-modal-card';
+  card.setAttribute('role', 'dialog');
+  card.setAttribute('aria-modal', 'true');
+  card.setAttribute('aria-labelledby', 'uptdModalTitle');
+
+  const head = document.createElement('div');
+  head.className = 'uptd-modal-head';
+
+  const titleWrap = document.createElement('div');
+  const label = document.createElement('div');
+  label.className = 'uptd-modal-label';
+  label.textContent = 'Detail Pejabat UPTD';
+
+  const title = document.createElement('h3');
+  title.id = 'uptdModalTitle';
+
+  const closeButton = document.createElement('button');
+  closeButton.className = 'uptd-modal-close';
+  closeButton.type = 'button';
+  closeButton.setAttribute('aria-label', 'Tutup popup UPTD');
+  closeButton.innerHTML = '<i class="ti ti-x"></i>';
+  closeButton.addEventListener('click', closeUptdModal);
+
+  const list = document.createElement('ol');
+  list.className = 'uptd-official-list';
+  list.id = 'uptdOfficialList';
+
+  titleWrap.append(label, title);
+  head.append(titleWrap, closeButton);
+  card.append(head, list);
+  modal.append(card);
+  document.body.appendChild(modal);
+
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) closeUptdModal();
+  });
+
+  return modal;
+}
+
+function openUptdModal(key) {
+  const data = UPTD_OFFICIALS[key];
+  if (!data) return;
+
+  const modal = document.getElementById('uptdModal') || buildUptdModal();
+  const title = modal.querySelector('#uptdModalTitle');
+  const list = modal.querySelector('#uptdOfficialList');
+
+  title.textContent = data.title;
+  list.innerHTML = '';
+
+  data.officials.forEach((official, index) => {
+    const item = document.createElement('li');
+    const number = document.createElement('span');
+    const content = document.createElement('div');
+    const name = document.createElement('div');
+    const role = document.createElement('div');
+
+    number.className = 'uptd-official-no';
+    number.textContent = index + 1;
+    name.className = 'uptd-official-name';
+    name.textContent = official.name;
+    role.className = 'uptd-official-role';
+    role.textContent = official.role;
+
+    content.append(name, role);
+    item.append(number, content);
+    list.appendChild(item);
+  });
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  refreshBodyScrollLock();
+}
+
+function closeUptdModal() {
+  const modal = document.getElementById('uptdModal');
+  if (!modal) return;
+
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  refreshBodyScrollLock();
+}
+
+function initUptdPopup() {
+  document.querySelectorAll('.uptd-table tbody tr').forEach((row) => {
+    const uptdCell = row.children[1];
+    if (!uptdCell || uptdCell.querySelector('.uptd-name-btn')) return;
+
+    const key = findUptdKey(uptdCell.textContent);
+    if (!key) return;
+
+    row.classList.add('uptd-clickable-row');
+    row.title = 'Klik untuk melihat detail pejabat UPTD';
+    row.addEventListener('click', (event) => {
+      if (event.target.closest('.uptd-name-btn')) return;
+      openUptdModal(key);
+    });
+
+    const button = document.createElement('button');
+    button.className = 'uptd-name-btn';
+    button.type = 'button';
+    button.textContent = uptdCell.textContent;
+    button.addEventListener('click', () => openUptdModal(key));
+
+    uptdCell.textContent = '';
+    uptdCell.appendChild(button);
+  });
+}
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    closeNewsDetailModal();
+    closeUptdModal();
+    closePpidLinkModal();
+    closeGalleryModal();
+  }
+});
+
+// =========================================================
+// 14. Toggle tabel UPTD
+// =========================================================
+// Secara awal tabel hanya menampilkan 10 Kepala UPTD.
+// Tombol ini membuka/menutup baris 11-22 agar halaman tetap ringkas.
+function toggleUptdRows(button) {
+  const table = document.querySelector('.uptd-table');
+  const isOpen = table.classList.toggle('show-all');
+
+  button.setAttribute('aria-expanded', String(isOpen));
+  button.textContent = isOpen ? 'Sembunyikan daftar UPTD' : 'Lihat semua UPTD';
+}
+
+// =========================================================
+// 15. Menu mobile
+// =========================================================
+// Fungsi ini membuka/menutup menu hamburger pada layar kecil.
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  menu.classList.toggle('open');
+}
+
+// =========================================================
+// 16. Dropdown menu aplikasi
+// =========================================================
+// `stopPropagation()` mencegah klik tombol Aplikasi ikut
+// dianggap sebagai klik di luar dropdown.
+function toggleAppMenu(event) {
+  event.stopPropagation();
+  document.getElementById('appDropdown').classList.toggle('open');
+}
+
+// =========================================================
+// 17. Hero slider
+// =========================================================
+// Hero menggunakan beberapa gambar latar agar halaman terasa hidup.
+// Pengguna bisa pindah slide lewat tombol, titik, atau swipe di mobile.
+function initHeroSlider() {
+  const slider = document.getElementById('heroSlider');
+  const prevBtn = document.getElementById('heroPrev');
+  const nextBtn = document.getElementById('heroNext');
+  const dotsWrap = document.getElementById('heroDots');
+  if (!slider || !prevBtn || !nextBtn || !dotsWrap) return;
+
+  const slides = Array.from(slider.querySelectorAll('.hero-slide'));
+  if (!slides.length) return;
+
+  let currentIndex = 0;
+  let autoTimer = null;
+  let touchStartX = 0;
+  let touchDeltaX = 0;
+  const AUTO_SLIDE_MS = 10000;
+
+  const getRandomNextIndex = () => {
+    if (slides.length <= 1) return 0;
+
+    let nextIndex = currentIndex;
+    while (nextIndex === currentIndex) {
+      nextIndex = Math.floor(Math.random() * slides.length);
+    }
+    return nextIndex;
+  };
+
+  const renderDots = () => {
+    dotsWrap.innerHTML = slides.map((_, index) => `
+      <button class="hero-dot ${index === currentIndex ? 'is-active' : ''}"
+        type="button"
+        data-index="${index}"
+        aria-label="Tampilkan slide ${index + 1}"></button>
+    `).join('');
+  };
+
+  const setActiveSlide = (targetIndex) => {
+    currentIndex = (targetIndex + slides.length) % slides.length;
+    slides.forEach((slide, index) => {
+      slide.classList.toggle('is-active', index === currentIndex);
+    });
+    dotsWrap.querySelectorAll('.hero-dot').forEach((dot, index) => {
+      dot.classList.toggle('is-active', index === currentIndex);
+    });
+  };
+
+  const restartAutoSlide = () => {
+    if (autoTimer) window.clearInterval(autoTimer);
+    autoTimer = window.setInterval(() => setActiveSlide(getRandomNextIndex()), AUTO_SLIDE_MS);
+  };
+
+  renderDots();
+  setActiveSlide(0);
+  restartAutoSlide();
+
+  prevBtn.addEventListener('click', () => {
+    setActiveSlide(currentIndex - 1);
+    restartAutoSlide();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    setActiveSlide(currentIndex + 1);
+    restartAutoSlide();
+  });
+
+  dotsWrap.addEventListener('click', (event) => {
+    const dot = event.target.closest('.hero-dot');
+    if (!dot) return;
+
+    const targetIndex = Number(dot.dataset.index);
+    if (Number.isNaN(targetIndex)) return;
+
+    setActiveSlide(targetIndex);
+    restartAutoSlide();
+  });
+
+  slider.addEventListener('touchstart', (event) => {
+    touchStartX = event.changedTouches[0].clientX;
+    touchDeltaX = 0;
+  }, { passive: true });
+
+  slider.addEventListener('touchmove', (event) => {
+    touchDeltaX = event.changedTouches[0].clientX - touchStartX;
+  }, { passive: true });
+
+  slider.addEventListener('touchend', () => {
+    if (Math.abs(touchDeltaX) < 45) return;
+
+    if (touchDeltaX < 0) setActiveSlide(currentIndex + 1);
+    else setActiveSlide(currentIndex - 1);
+
+    restartAutoSlide();
+  });
+}
+
+function searchBeritaCards(query) {
+  const cards = Array.from(document.querySelectorAll('#beritaGrid .berita-card'));
+  if (!cards.length) return false;
+
+  const matchedCard = cards.find((card) => {
+    const title = card.querySelector('.berita-title')?.textContent?.toLowerCase() || '';
+    const summary = card.querySelector('.berita-summary')?.textContent?.toLowerCase() || '';
+    const category = card.querySelector('.berita-tag')?.textContent?.toLowerCase() || '';
+
+    return title.includes(query) || summary.includes(query) || category.includes(query);
+  });
+
+  if (!matchedCard) return false;
+
+  document.querySelectorAll('#beritaGrid .berita-card.search-hit')
+    .forEach((card) => card.classList.remove('search-hit'));
+  matchedCard.classList.add('search-hit');
+
+  matchedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  history.replaceState(null, '', '#berita');
+
+  window.setTimeout(() => {
+    matchedCard.classList.remove('search-hit');
+  }, 1800);
+
+  return true;
+}
+
+async function searchBeritaData(query) {
+  const fallbackItems = FALLBACK_DATA.berita || [];
+
+  if (window.BPADPublicData?.enabled) {
+    try {
+      const dbItems = await window.BPADPublicData.getBerita();
+      if (Array.isArray(dbItems)) {
+        return dbItems.some((item) => {
+          const searchable = `${item.judul || ''} ${item.ringkasan || ''} ${item.kategori || ''}`.toLowerCase();
+          return searchable.includes(query);
+        });
+      }
+    } catch (error) {
+      console.warn(error);
+      return false;
+    }
+  }
+
+  try {
+    const jsonItems = await loadJson(DATA_FILES.berita);
+    return [...jsonItems, ...fallbackItems].some((item) => {
+      const searchable = `${item.judul || ''} ${item.ringkasan || ''} ${item.kategori || ''}`.toLowerCase();
+      return searchable.includes(query);
+    });
+  } catch (error) {
+    return fallbackItems.some((item) => {
+      const searchable = `${item.judul || ''} ${item.ringkasan || ''} ${item.kategori || ''}`.toLowerCase();
+      return searchable.includes(query);
+    });
+  }
+}
+
+function highlightBeritaFromUrl() {
+  const query = new URLSearchParams(window.location.search).get('search');
+  if (!query) return;
+
+  window.requestAnimationFrame(() => {
+    searchBeritaCards(query.toLowerCase());
+  });
+}
+
+// =========================================================
+// 18. Pencarian cepat di headbar
+// =========================================================
+// Kotak pencarian ini membantu pengguna melompat cepat ke section
+// utama berdasarkan kata kunci sederhana.
+async function handleNavSearch(event) {
+  event.preventDefault();
+
+  const input = document.getElementById('navSearchInput');
+  if (!input) return;
+
+  const query = input.value.trim().toLowerCase();
+  if (!query) return;
+
+  if (searchBeritaCards(query)) return;
+
+  if (await searchBeritaData(query)) {
+    window.location.href = `/berita?search=${encodeURIComponent(query)}#berita`;
+    return;
+  }
+
+  const searchTargets = [
+    { id: 'profil', url: '/profil', keywords: ['profil', 'tentang', 'struktur', 'uptd'] },
+    { id: 'layanan', url: '/layanan', keywords: ['layanan', 'pelayanan', 'pajak', 'samsat'] },
+    { id: 'galeri', url: '/galeri', keywords: ['galeri', 'foto', 'gambar', 'instagram', 'dokumentasi', 'kegiatan'] },
+    { id: 'ppid', url: '/ppid', keywords: ['ppid', 'informasi', 'permohonan'] },
+    { id: 'berita', url: '/berita', keywords: ['berita', 'kabar', 'news'] },
+    { id: 'pengumuman', url: '/pengumuman', keywords: ['pengumuman', 'info', 'agenda'] },
+    { id: 'kontak', url: '/#kontak', keywords: ['kontak', 'alamat', 'lokasi', 'hubungi'] }
+  ];
+
+  const match = searchTargets.find((target) =>
+    target.keywords.some((keyword) => query.includes(keyword))
+  );
+
+  if (!match) {
+    input.value = '';
+    input.placeholder = 'Menu tidak ditemukan';
+    window.setTimeout(() => {
+      input.placeholder = 'Cari menu...';
+    }, 1400);
+    return;
+  }
+
+  const section = document.getElementById(match.id);
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    history.replaceState(null, '', `#${match.id}`);
+  } else {
+    window.location.href = match.url;
+  }
+}
+
+// =========================================================
+// 19. Tanggal update PAD hari ini
+// =========================================================
+// Komponen PAD memakai placeholder sampai tersedia sumber data resmi,
+// tetapi tanggal update dibuat otomatis agar selalu sesuai hari akses.
+function updatePadTodayDate() {
+  const dateElement = document.getElementById('padUpdateDate');
+  if (!dateElement) return;
+
+  const today = new Intl.DateTimeFormat('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }).format(new Date());
+
+  dateElement.textContent = `Update ${today}`;
+}
+
+// =========================================================
+// 20. Animasi halus saat scroll
+// =========================================================
+// Elemen penting diberi class scroll-reveal secara otomatis.
+// IntersectionObserver membuat animasi baru berjalan saat elemen
+// mulai masuk viewport, sehingga halaman terasa hidup tapi tetap ringan.
+function initScrollAnimations() {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const revealSelectors = [
+    '.stats-strip .stat-item',
+    '.pad-today-head',
+    '.pad-today-card',
+    '.pad-today-note',
+    '.quick-link',
+    '.section-hdr',
+    '.visi-card',
+    '.layanan-card',
+    '.detail-card',
+    '.berita-card',
+    '.pgm-card',
+    '.info-block',
+    '.map-block',
+    '.footer-col'
+  ];
+
+  if (prefersReducedMotion) {
+    document.querySelectorAll(revealSelectors.join(',')).forEach((element) => {
+      element.classList.add('revealed');
+    });
+    return;
+  }
+
+  const observedElements = new WeakSet();
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+
+      entry.target.classList.add('revealed');
+      observer.unobserve(entry.target);
+    });
+  }, {
+    threshold: 0.14,
+    rootMargin: '0px 0px -60px 0px'
+  });
+
+  const prepareRevealElements = () => {
+    document.querySelectorAll(revealSelectors.join(',')).forEach((element, index) => {
+      if (observedElements.has(element)) return;
+
+      const stagger = Math.min(index % 6, 5) * 70;
+      element.style.setProperty('--reveal-delay', `${stagger}ms`);
+      element.classList.add('scroll-reveal');
+
+      if (element.matches('.section-hdr')) element.classList.add('reveal-left');
+      if (element.matches('.layanan-card, .berita-card, .detail-card')) element.classList.add('reveal-scale');
+
+      observedElements.add(element);
+      observer.observe(element);
+    });
+  };
+
+  prepareRevealElements();
+
+  const mutationObserver = new MutationObserver(() => {
+    window.requestAnimationFrame(prepareRevealElements);
+  });
+
+  mutationObserver.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+}
+
+// Tutup menu mobile setelah salah satu link diklik.
+document.querySelectorAll('.mobile-menu a').forEach((link) => {
+  link.addEventListener('click', () => {
+    document.getElementById('mobileMenu').classList.remove('open');
+  });
+});
+
+// Tutup dropdown Aplikasi saat pengguna klik area lain di halaman.
+document.addEventListener('click', () => {
+  document.getElementById('appDropdown')?.classList.remove('open');
+});
+
+// Tutup dropdown Aplikasi setelah salah satu link aplikasi diklik.
+document.querySelectorAll('#appMenu a').forEach((link) => {
+  link.addEventListener('click', () => {
+    document.getElementById('appDropdown').classList.remove('open');
+  });
+});
+
+document.getElementById('navSearchForm')?.addEventListener('submit', handleNavSearch);
+
+// Mulai isi konten dinamis ketika script dimuat.
+initHeroSlider();
+updatePadTodayDate();
+hydrateContent();
+initUptdPopup();
+initPpidPortal();
+refreshBodyScrollLock();
+initScrollAnimations();

@@ -1,0 +1,59 @@
+services:
+  app:
+    build:
+      context: .
+    command: >
+      sh -c "composer install --no-interaction --prefer-dist
+      && php artisan migrate --force
+      && php artisan serve --host=0.0.0.0 --port=8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://127.0.0.1:8000
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: bpadntt
+      DB_USERNAME: bpadntt
+      DB_PASSWORD: change-this-local-password
+      SESSION_DRIVER: database
+      CACHE_STORE: database
+      QUEUE_CONNECTION: database
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/var/www/html
+      - vendor_data:/var/www/html/vendor
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: bpadntt
+      POSTGRES_USER: bpadntt
+      POSTGRES_PASSWORD: change-this-local-password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bpadntt -d bpadntt"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer:4
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
+  vendor_data:
