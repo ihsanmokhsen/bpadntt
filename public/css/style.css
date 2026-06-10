@@ -1235,32 +1235,32 @@ img { max-width: 100%; }
   z-index: -2;
   background:
     linear-gradient(110deg, rgba(6, 39, 59, .95), rgba(28, 94, 120, .78)),
-    url("../assets/hero2.png") center / cover no-repeat;
+    url("../assets/herox.jpeg") center / cover no-repeat;
 }
 .page-hero .ppid-hero-bg {
   background:
     linear-gradient(110deg, rgba(6, 39, 59, .95), rgba(28, 94, 120, .76)),
-    url("../assets/hero2.png") center / cover no-repeat;
+    url("../assets/herox.jpeg") center / cover no-repeat;
 }
 .page-hero-layanan .ppid-hero-bg {
   background:
     linear-gradient(110deg, rgba(6, 39, 59, .95), rgba(35, 110, 136, .74)),
-    url("../assets/hero3.png") center / cover no-repeat;
+    url("../assets/heroy.jpeg") center / cover no-repeat;
 }
 .page-hero-berita .ppid-hero-bg {
   background:
     linear-gradient(110deg, rgba(6, 39, 59, .95), rgba(34, 91, 116, .72)),
-    url("../assets/hero4.png") center / cover no-repeat;
+    url("../assets/herox.jpeg") center / cover no-repeat;
 }
 .page-hero-pengumuman .ppid-hero-bg {
   background:
     linear-gradient(110deg, rgba(6, 39, 59, .95), rgba(43, 104, 127, .72)),
-    url("../assets/hero5.png") center / cover no-repeat;
+    url("../assets/heroy.jpeg") center / cover no-repeat;
 }
 .page-hero-galeri .ppid-hero-bg {
   background:
     linear-gradient(110deg, rgba(6, 39, 59, .94), rgba(35, 112, 139, .72)),
-    url("../assets/hero2.png") center / cover no-repeat;
+    url("../assets/herox.jpeg") center / cover no-repeat;
 }
 .page-hero {
   margin-bottom: -1px;

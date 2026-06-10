@@ -52,8 +52,8 @@
   $heroBadgeImage = ($settings ?? collect())->get('hero.badge.image', '/assets/ayobangunntt.png');
   $heroBadgeAlt = ($settings ?? collect())->get('hero.badge.alt', 'Ayo Bangun NTT');
   $heroSlides = [
-    ($settings ?? collect())->get('hero.slide.2', '/assets/hero3.png'),
-    ($settings ?? collect())->get('hero.slide.4', '/assets/hero5.png'),
+    ($settings ?? collect())->get('hero.slide.2', '/assets/herox.jpeg'),
+    ($settings ?? collect())->get('hero.slide.4', '/assets/heroy.jpeg'),
   ];
 @endphp
 
