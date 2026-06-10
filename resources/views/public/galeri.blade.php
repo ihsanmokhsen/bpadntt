@@ -19,26 +19,7 @@
 <body>
 @include('public.partials.header', ['active' => 'galeri'])
 
-<!--
-  DATA PAD HARI INI
-  Komponen ringkas sebelum hero. Nilai realisasi masih placeholder
-  agar aman sampai tersedia sumber data resmi/API/database.
--->
-<section class="pad-today" aria-label="Data Pendapatan Asli Daerah hari ini">
-  <div class="pad-today-inner">
-    <div class="pad-today-head">
-      <span class="pad-live-dot"></span>
-      <strong>PAD Hari Ini</strong>
-    </div>
-    <div class="pad-today-line">
-      <span>Realisasi: <strong>Rp --</strong></span>
-      <span>Target 2026: <strong>Rp 2,8T</strong></span>
-      <span>Realisasi: <strong>--%</strong></span>
-      <span id="padUpdateDate">Update hari ini</span>
-      <span class="pad-status">Menunggu data resmi</span>
-    </div>
-  </div>
-</section>
+@include('public.partials.pad-today')
 
 <section class="ppid-hero page-hero page-hero-galeri" aria-labelledby="galeriHeroTitle">
   <div class="ppid-hero-bg" aria-hidden="true"></div>
