@@ -205,16 +205,6 @@ class WebsiteSettingController extends Controller
                 'is_public' => true,
             ],
             [
-                'name' => 'hero_slide_1',
-                'setting_key' => 'hero.slide.1',
-                'group_name' => 'hero',
-                'label' => 'Hero Slide 1',
-                'type' => 'text',
-                'placeholder' => '/assets/hero2.png',
-                'help' => 'Gambar pertama pada slider hero.',
-                'is_public' => true,
-            ],
-            [
                 'name' => 'hero_slide_2',
                 'setting_key' => 'hero.slide.2',
                 'group_name' => 'hero',
@@ -222,16 +212,6 @@ class WebsiteSettingController extends Controller
                 'type' => 'text',
                 'placeholder' => '/assets/hero3.png',
                 'help' => 'Gambar kedua pada slider hero.',
-                'is_public' => true,
-            ],
-            [
-                'name' => 'hero_slide_3',
-                'setting_key' => 'hero.slide.3',
-                'group_name' => 'hero',
-                'label' => 'Hero Slide 3',
-                'type' => 'text',
-                'placeholder' => '/assets/hero4.png',
-                'help' => 'Gambar ketiga pada slider hero.',
                 'is_public' => true,
             ],
             [

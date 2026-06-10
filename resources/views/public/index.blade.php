@@ -48,13 +48,11 @@
 -->
 @php
   $heroTitle = ($settings ?? collect())->get('hero.title', 'Optimalisasi Pendapatan Daerah & Pengelolaan Aset');
-  $heroDescription = ($settings ?? collect())->get('hero.description', 'Memberikan pelayanan prima dalam pengelolaan pendapatan daerah dan aset untuk mendukung pembangunan Nusa Tenggara Timur yang berkeadilan dan berkelanjutan.');
+  $heroDescription = ($settings ?? collect())->get('hero.description', '“Pendapatan Terjaga, Aset Tertata” menjadi komitmen utama BPAD Provinsi Nusa Tenggara Timur dalam mewujudkan tata kelola keuangan daerah yang transparan, akuntabel, dan berkelanjutan.');
   $heroBadgeImage = ($settings ?? collect())->get('hero.badge.image', '/assets/ayobangunntt.png');
   $heroBadgeAlt = ($settings ?? collect())->get('hero.badge.alt', 'Ayo Bangun NTT');
   $heroSlides = [
-    ($settings ?? collect())->get('hero.slide.1', '/assets/hero2.png'),
     ($settings ?? collect())->get('hero.slide.2', '/assets/hero3.png'),
-    ($settings ?? collect())->get('hero.slide.3', '/assets/hero4.png'),
     ($settings ?? collect())->get('hero.slide.4', '/assets/hero5.png'),
   ];
 @endphp
