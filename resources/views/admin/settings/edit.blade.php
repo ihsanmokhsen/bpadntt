@@ -70,8 +70,13 @@
 
             <div class="editor-actions">
                 <button class="button" type="submit">Simpan Pengaturan</button>
+                <button class="button button-secondary" form="reset-defaults-form" type="submit">Isi Default Pengaturan</button>
                 <a class="button button-secondary" href="{{ route('admin.dashboard') }}">Kembali ke Dashboard</a>
             </div>
+        </form>
+
+        <form id="reset-defaults-form" method="post" action="{{ route('admin.settings.reset') }}" onsubmit="return confirm('Apakah kamu yakin ingin mengembalikan semua pengaturan ke nilai default?');">
+            @csrf
         </form>
     </section>
 @endsection

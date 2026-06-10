@@ -45,6 +45,7 @@ Route::prefix('admin')->middleware(['auth', 'active-admin'])->name('admin.')->gr
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::get('/pengaturan-web', [WebsiteSettingController::class, 'edit'])->name('settings.edit');
     Route::put('/pengaturan-web', [WebsiteSettingController::class, 'update'])->name('settings.update');
+    Route::post('/pengaturan-web/defaults', [WebsiteSettingController::class, 'resetDefaults'])->name('settings.reset');
     Route::get('/konten', [PostController::class, 'index'])->name('posts.index');
     Route::get('/konten/tambah', [PostController::class, 'create'])->name('posts.create');
     Route::post('/konten', [PostController::class, 'store'])->name('posts.store');

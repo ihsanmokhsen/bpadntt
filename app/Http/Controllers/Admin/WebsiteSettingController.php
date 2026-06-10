@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\WebsiteSettingRequest;
 use App\Models\AuditLog;
 use App\Models\WebsiteSetting;
+use Database\Seeders\WebsiteSettingSeeder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -52,6 +53,28 @@ class WebsiteSettingController extends Controller
         return redirect()
             ->route('admin.settings.edit')
             ->with('success', 'Pengaturan website berhasil disimpan.');
+    }
+
+    public function resetDefaults(): RedirectResponse
+    {
+        DB::transaction(function () {
+            (new WebsiteSettingSeeder())->run();
+        });
+
+        AuditLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'website_settings.reset_defaults',
+            'subject_type' => WebsiteSetting::class,
+            'subject_id' => null,
+            'old_values' => null,
+            'new_values' => null,
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
+
+        return redirect()
+            ->route('admin.settings.edit')
+            ->with('success', 'Semua pengaturan telah diisi ulang ke nilai default.');
     }
 
     private function persistSettings(WebsiteSettingRequest $request): array
