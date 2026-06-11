@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260604-glass-header">
+  <link rel="stylesheet" href="/css/style.css?v=20260611-share1">
   <style>
     .post-article { max-width: 820px; margin: 0 auto; padding: 3rem 1.5rem; }
     .post-article .post-eyebrow { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: #c9a84c; margin-bottom: .5rem; }
@@ -115,8 +115,8 @@
 @include('public.partials.contact-bar')
 @include('public.partials.footer')
 
-<script src="/js/public-data.js?v=20260603-dbsource1"></script>
-<script src="/js/main.js?v=20260603-dbsource1"></script>
+<script src="/js/public-data.js?v=20260611-share1"></script>
+<script src="/js/main.js?v=20260611-share1"></script>
 <script>
 document.getElementById('copyLinkBtn').addEventListener('click', function() {
   const url = this.dataset.url;
