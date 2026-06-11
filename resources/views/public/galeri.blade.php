@@ -9,6 +9,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galeri – BPAD NTT</title>
+  <meta name="description" content="Dokumentasi kegiatan, agenda lapangan, dan publikasi resmi BPAD NTT melalui foto dan video.">
+  <meta property="og:title" content="Galeri – BPAD NTT">
+  <meta property="og:description" content="Dokumentasi kegiatan BPAD NTT melalui foto dan video resmi.">
+  <meta property="og:image" content="https://bpadntt.cloud/assets/logo.png">
+  <meta property="og:url" content="https://bpadntt.cloud/galeri">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="/assets/logo.png">
   <link rel="apple-touch-icon" href="/assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">

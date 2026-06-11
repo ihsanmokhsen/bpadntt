@@ -9,6 +9,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BPAD – Badan Pendapatan dan Aset Daerah Provinsi NTT</title>
+  <meta name="description" content="Website resmi Badan Pendapatan dan Aset Daerah Provinsi Nusa Tenggara Timur. Informasi layanan pajak daerah, pengelolaan aset, PPID, dan berita terkini BPAD NTT.">
+  <meta property="og:title" content="BPAD – Badan Pendapatan dan Aset Daerah Provinsi NTT">
+  <meta property="og:description" content="Optimalisasi Pendapatan Daerah & Pengelolaan Aset. Memberikan pelayanan prima dalam pengelolaan pendapatan daerah dan aset untuk NTT yang berkeadilan.">
+  <meta property="og:image" content="https://bpadntt.cloud/assets/logo.png">
+  <meta property="og:url" content="https://bpadntt.cloud/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="/assets/logo.png">
   <link rel="apple-touch-icon" href="/assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">

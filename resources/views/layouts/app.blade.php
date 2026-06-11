@@ -17,7 +17,7 @@
 
     <header class="site-header">
         <a class="brand" href="{{ route('home') }}">
-            <img src="{{ asset('assets/logo.png') }}" alt="Logo BPAD NTT">
+            <img src="{{ asset('assets/logo.png') }}" alt="Logo BPAD NTT" loading="lazy">
             <span>
                 <strong>{{ $siteShortName }}</strong>
                 <small>{{ $siteTagline }}</small>

@@ -9,6 +9,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profil – BPAD NTT</title>
+  <meta name="description" content="Profil Badan Pendapatan dan Aset Daerah Provinsi NTT: visi, misi, tugas fungsi, dan struktur organisasi BPAD NTT.">
+  <meta property="og:title" content="Profil – BPAD NTT">
+  <meta property="og:description" content="Mengenal visi, misi, tugas fungsi, dan struktur organisasi BPAD Provinsi Nusa Tenggara Timur.">
+  <meta property="og:image" content="https://bpadntt.cloud/assets/logo.png">
+  <meta property="og:url" content="https://bpadntt.cloud/profil">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="/assets/logo.png">
   <link rel="apple-touch-icon" href="/assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">

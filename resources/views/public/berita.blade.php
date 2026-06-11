@@ -9,6 +9,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Berita – BPAD NTT</title>
+  <meta name="description" content="Arsip berita resmi, publikasi kegiatan, dan informasi terbaru dari Badan Pendapatan dan Aset Daerah Provinsi NTT.">
+  <meta property="og:title" content="Berita – BPAD NTT">
+  <meta property="og:description" content="Arsip kabar resmi, publikasi kegiatan, dan informasi terbaru dari BPAD Provinsi NTT.">
+  <meta property="og:image" content="https://bpadntt.cloud/assets/logo.png">
+  <meta property="og:url" content="https://bpadntt.cloud/berita">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="/assets/logo.png">
   <link rel="apple-touch-icon" href="/assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">

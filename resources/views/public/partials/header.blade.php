@@ -20,7 +20,7 @@
 
 <nav class="navbar" id="navbar">
   <div class="logo-area">
-    <div class="logo-img"><img src="/assets/logo.png" alt="Logo BPAD NTT"></div>
+    <div class="logo-img"><img src="/assets/logo.png" alt="Logo BPAD NTT" loading="lazy"></div>
     <div class="logo-text">
       <h1>{{ $siteShortName }}</h1>
       <p>{{ $siteTagline }}</p>

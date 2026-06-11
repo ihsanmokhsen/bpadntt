@@ -43,6 +43,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PPID – {{ $siteShortName }}</title>
+  <meta name="description" content="PPID BPAD NTT – Portal Pejabat Pengelola Informasi dan Dokumentasi. Akses dokumen publik, permohonan informasi, dan pengajuan keberatan.">
+  <meta property="og:title" content="PPID – {{ $siteShortName }}">
+  <meta property="og:description" content="Portal PPID BPAD NTT. Akses dokumen informasi publik, permohonan, dan pengajuan keberatan.">
+  <meta property="og:image" content="https://bpadntt.cloud/assets/logo.png">
+  <meta property="og:url" content="https://bpadntt.cloud/ppid">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="/assets/logo.png">
   <link rel="apple-touch-icon" href="/assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">

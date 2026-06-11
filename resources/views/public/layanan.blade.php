@@ -9,6 +9,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Layanan – BPAD NTT</title>
+  <meta name="description" content="Layanan pajak daerah, pengelolaan aset, e-Samsat, NPWPD, dan konsultasi pajak dari BPAD Provinsi Nusa Tenggara Timur.">
+  <meta property="og:title" content="Layanan – BPAD NTT">
+  <meta property="og:description" content="Akses informasi layanan pajak daerah, pengelolaan aset, dan kanal pelayanan digital BPAD NTT.">
+  <meta property="og:image" content="https://bpadntt.cloud/assets/logo.png">
+  <meta property="og:url" content="https://bpadntt.cloud/layanan">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="/assets/logo.png">
   <link rel="apple-touch-icon" href="/assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
