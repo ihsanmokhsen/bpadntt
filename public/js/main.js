@@ -598,19 +598,49 @@ function renderBerita(items) {
     return;
   }
 
-  container.innerHTML = list.map((item) => `
-    <div class="berita-card">
-      <div class="berita-thumb ${getThemeClass('bt', item.tema)}">
-        <i class="ti ${getSafeIconClass(item.ikon)}"></i>
+  container.innerHTML = list.map((item) => {
+    const shareUrl = 'https://bpadntt.cloud' + (item.link || '/berita');
+    const shareText = encodeURIComponent((item.judul || 'Berita BPAD NTT') + ' – BPAD NTT');
+    const shareEnc = encodeURIComponent(shareUrl);
+    return `
+    <div class="berita-card-wrap">
+      <div class="berita-card">
+        <div class="berita-thumb ${getThemeClass('bt', item.tema)}">
+          <i class="ti ${getSafeIconClass(item.ikon)}"></i>
+        </div>
+        <div class="berita-body">
+          <span class="berita-tag ${getThemeClass('tag-', item.tema)}">${escapeHtml(item.kategori || 'Berita')}</span>
+          <div class="berita-title">${escapeHtml(item.judul)}</div>
+          <p class="berita-summary">${escapeHtml(item.ringkasan || '')}</p>
+          <div class="berita-date"><i class="ti ti-calendar"></i> ${escapeHtml(formatTanggal(item.tanggal))}</div>
+        </div>
       </div>
-      <div class="berita-body">
-        <span class="berita-tag ${getThemeClass('tag-', item.tema)}">${escapeHtml(item.kategori || 'Berita')}</span>
-        <div class="berita-title">${escapeHtml(item.judul)}</div>
-        <p class="berita-summary">${escapeHtml(item.ringkasan || '')}</p>
-        <div class="berita-date"><i class="ti ti-calendar"></i> ${escapeHtml(formatTanggal(item.tanggal))}</div>
+      <div class="card-share-bar" onclick="event.stopPropagation()">
+        <a class="card-share-btn" href="https://wa.me/?text=${shareText}+${shareEnc}" target="_blank" rel="noopener" title="Bagikan ke WhatsApp" aria-label="WhatsApp"><i class="ti ti-brand-whatsapp"></i></a>
+        <a class="card-share-btn" href="https://www.facebook.com/sharer/sharer.php?u=${shareEnc}" target="_blank" rel="noopener" title="Bagikan ke Facebook" aria-label="Facebook"><i class="ti ti-brand-facebook"></i></a>
+        <a class="card-share-btn" href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareEnc}" target="_blank" rel="noopener" title="Bagikan ke X/Twitter" aria-label="X/Twitter"><i class="ti ti-brand-x"></i></a>
+        <a class="card-share-btn" href="https://t.me/share/url?url=${shareEnc}&text=${shareText}" target="_blank" rel="noopener" title="Bagikan ke Telegram" aria-label="Telegram"><i class="ti ti-brand-telegram"></i></a>
+        <button class="card-share-btn card-share-copy" data-share-url="${shareUrl}" title="Salin tautan" aria-label="Salin link"><i class="ti ti-link"></i></button>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
+
+  // Bind copy-link buttons
+  container.querySelectorAll('.card-share-copy').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var url = this.dataset.shareUrl;
+      var self = this;
+      navigator.clipboard.writeText(url).then(function() {
+        self.classList.add('copied');
+        self.innerHTML = '<i class="ti ti-check"></i>';
+        setTimeout(function() {
+          self.classList.remove('copied');
+          self.innerHTML = '<i class="ti ti-link"></i>';
+        }, 2000);
+      });
+    });
+  });
 
   bindBeritaCardDetailPopup(list);
   highlightBeritaFromUrl();

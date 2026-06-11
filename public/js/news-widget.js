@@ -469,6 +469,7 @@
 
     bindNewsDetailPopup(root);
     bindNewsImageFallbacks(root);
+    bindShareCopyButtons(root);
     setupSlider(headlines.length);
   }
 
@@ -504,6 +505,9 @@
   }
 
   function renderNewsCard(item, key, index = 0) {
+    const shareUrl = 'https://bpadntt.cloud' + (item.url || '/berita');
+    const shareText = encodeURIComponent((item.title || 'Berita BPAD NTT') + ' – BPAD NTT');
+    const shareEnc = encodeURIComponent(shareUrl);
     return `
       <div class="nw-card nw-news-clickable" data-news-key="${escapeHtml(key || '')}">
         <div class="nw-card-media">
@@ -516,6 +520,12 @@
           </div>
           <h4>${escapeHtml(item.title)}</h4>
           <p>${escapeHtml(item.summary)}</p>
+        </div>
+        <div class="nw-card-share" onclick="event.stopPropagation()">
+          <a class="card-share-btn" href="https://wa.me/?text=${shareText}+${shareEnc}" target="_blank" rel="noopener" title="Bagikan ke WhatsApp"><i class="ti ti-brand-whatsapp"></i></a>
+          <a class="card-share-btn" href="https://www.facebook.com/sharer/sharer.php?u=${shareEnc}" target="_blank" rel="noopener" title="Bagikan ke Facebook"><i class="ti ti-brand-facebook"></i></a>
+          <a class="card-share-btn" href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareEnc}" target="_blank" rel="noopener" title="Bagikan ke X/Twitter"><i class="ti ti-brand-x"></i></a>
+          <button class="card-share-btn nw-share-copy" data-share-url="${shareUrl}" title="Salin tautan"><i class="ti ti-link"></i></button>
         </div>
       </div>
     `;
@@ -541,6 +551,25 @@
     });
 
     root.dataset.newsPopupBound = '1';
+  }
+
+  function bindShareCopyButtons(root) {
+    if (!root) return;
+    root.querySelectorAll('.nw-share-copy').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var url = this.dataset.shareUrl;
+        var self = this;
+        navigator.clipboard.writeText(url).then(function() {
+          self.classList.add('copied');
+          self.innerHTML = '<i class="ti ti-check"></i>';
+          setTimeout(function() {
+            self.classList.remove('copied');
+            self.innerHTML = '<i class="ti ti-link"></i>';
+          }, 2000);
+        });
+      });
+    });
   }
 
   function renderVideoNews(items) {

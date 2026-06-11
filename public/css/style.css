@@ -772,6 +772,8 @@ img { max-width: 100%; }
 
 /* ===================== BERITA ===================== */
 .berita-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.berita-card-wrap { display: flex; flex-direction: column; gap: 0; }
+.berita-card-wrap .card-share-bar { padding: 0 14px 10px; }
 .berita-card {
   background: var(--white);
   border-radius: 12px;
@@ -844,6 +846,39 @@ img { max-width: 100%; }
   gap: 5px;
 }
 .berita-date i { font-size: 12px; }
+/* --- Card Share Bar (berita cards + news widget) --- */
+.card-share-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 0 0;
+}
+.card-share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .2s;
+}
+.card-share-btn:hover { background: #e2e8f0; color: #1e293b; }
+.card-share-btn.copied { background: #16a34a; border-color: #16a34a; color: #fff; }
+/* News widget card share */
+.nw-card-share {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 16px 12px;
+  border-top: 1px solid #f1f5f9;
+  margin-top: auto;
+}
 .berita-empty {
   grid-column: 1 / -1;
   padding: 22px;
