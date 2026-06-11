@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\PpidDocument;
 use App\Models\WebsiteSetting;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -28,10 +27,10 @@ class HomeController extends Controller
         ]);
     }
 
-    public function showPost(string $slug): RedirectResponse
+    public function showPost(string $slug): View
     {
         $post = Post::published()->where('slug', $slug)->firstOrFail();
 
-        return redirect()->route('berita', ['slug' => $post->slug]);
+        return view('posts.show', compact('post'));
     }
 }
