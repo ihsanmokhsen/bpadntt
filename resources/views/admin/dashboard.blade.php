@@ -19,6 +19,7 @@
                 'Web Setting dipakai untuk identitas situs, hero, kontak, media sosial, dan tautan formulir PPID.',
                 'Kelola Konten dipakai untuk berita, pengumuman, dan agenda.',
                 'Kelola PPID dipakai untuk dokumen informasi publik dan tautan unduhannya.',
+                'Kelola Galeri dipakai untuk mengelola foto dan video kegiatan BPAD NTT.',
                 'Gunakan Lihat Website setelah menyimpan untuk memeriksa hasil pada halaman publik.',
             ],
         ])
@@ -47,6 +48,10 @@
                 <strong>Kelola PPID</strong>
                 <span>Atur dokumen publik, kategori, dan tautan unduhan.</span>
             </a>
+            <a href="{{ route('admin.galleries.index') }}">
+                <strong>Kelola Galeri</strong>
+                <span>Upload foto kegiatan atau tautkan dari Instagram.</span>
+            </a>
             <a href="{{ route('home') }}" target="_blank" rel="noopener">
                 <strong>Lihat Website</strong>
                 <span>Periksa hasil perubahan di halaman publik.</span>
@@ -60,6 +65,7 @@
             <article><strong>{{ $counts['published'] }}</strong><span>Terbit</span></article>
             <article><strong>{{ $counts['settings'] }}</strong><span>Pengaturan</span></article>
             <article><strong>{{ $counts['ppid'] }}</strong><span>Dokumen PPID</span></article>
+            <article><strong>{{ $counts['galleries'] }}</strong><span>Galeri</span></article>
             <article><strong>{{ $counts['media'] }}</strong><span>Media lokal</span></article>
         </div>
     </section>

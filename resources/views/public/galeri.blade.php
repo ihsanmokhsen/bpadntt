@@ -54,8 +54,8 @@
 
 <!--
   GALERI KEGIATAN
-  Menampilkan dokumentasi kegiatan BPAD NTT yang terhubung
-  dengan akun Instagram resmi BPAD NTT.
+  Menampilkan dokumentasi kegiatan BPAD NTT dari database.
+  Admin dapat menambahkan foto/video melalui dashboard Kelola Galeri.
 -->
 <section class="section-alt gallery-page" id="galeri">
   <div class="section-hdr">
@@ -67,92 +67,45 @@
   </div>
 
   <div class="gallery-grid">
-    <a class="gallery-card" href="https://www.instagram.com/p/DYeKbN9ExgZ/" target="_blank" rel="noopener">
-      <img src="/assets/instagram-01.jpg" alt="Dokumentasi kegiatan BPAD NTT" loading="lazy">
-      <div class="gallery-caption">
-        <span><i class="ti ti-brand-instagram"></i> 18 Mei 2026 · Foto</span>
-        <strong>Dokumentasi Kegiatan BPAD NTT</strong>
+    @forelse ($galleries as $gallery)
+      @php
+        $imgUrl = $gallery->image_path
+          ? (str_starts_with($gallery->image_path, '/') || preg_match('/^https?:/i', $gallery->image_path)
+            ? $gallery->image_path
+            : \Illuminate\Support\Facades\Storage::disk('public')->url($gallery->image_path))
+          : '/assets/logo.png';
+        $linkUrl = $gallery->instagram_url ?: '#';
+        $linkTarget = $gallery->instagram_url ? '_blank' : '_self';
+        $isVideo = $gallery->media_type === 'video';
+        $dateStr = $gallery->created_at ? $gallery->created_at->translatedFormat('j M Y') : '';
+        $typeLabel = $isVideo ? 'Reels' : 'Foto';
+      @endphp
+      <a class="gallery-card{{ $isVideo ? ' is-video' : '' }}" href="{{ $linkUrl }}" target="{{ $linkTarget }}" rel="{{ $linkTarget === '_blank' ? 'noopener' : '' }}">
+        <img src="{{ $imgUrl }}" alt="{{ $gallery->title }}" loading="lazy">
+        @if ($isVideo)
+          <div class="gallery-play"><i class="ti ti-player-play-filled"></i></div>
+        @endif
+        <div class="gallery-caption">
+          <span>
+            @if ($gallery->instagram_url)
+              <i class="ti ti-brand-instagram"></i>
+            @else
+              <i class="ti ti-camera"></i>
+            @endif
+            {{ $dateStr }} · {{ $typeLabel }}
+          </span>
+          <strong>{{ $gallery->title }}</strong>
+          @if ($gallery->caption)
+            <p>{{ Str::limit($gallery->caption, 80) }}</p>
+          @endif
+        </div>
+      </a>
+    @empty
+      <div style="grid-column:1/-1;text-align:center;padding:4rem 1rem;color:#94a3b8;">
+        <i class="ti ti-photo-off" style="font-size:3rem;display:block;margin-bottom:1rem;"></i>
+        <p>Belum ada galeri yang tersedia saat ini.</p>
       </div>
-    </a>
-    <a class="gallery-card" href="https://www.instagram.com/p/DYgqbQzEzoj/" target="_blank" rel="noopener">
-      <img src="/assets/instagram-02.jpg" alt="Rakor Samsat NTT 2026" loading="lazy">
-      <div class="gallery-caption">
-        <span><i class="ti ti-brand-instagram"></i> 19 Mei 2026 · Foto</span>
-        <strong>Rakor Samsat NTT 2026: Kolaborasi dan Inovasi</strong>
-      </div>
-    </a>
-    <a class="gallery-card" href="https://www.instagram.com/p/DYezpNHE8ca/" target="_blank" rel="noopener">
-      <img src="/assets/instagram-03.jpg" alt="Rapat internal BPAD NTT" loading="lazy">
-      <div class="gallery-caption">
-        <span><i class="ti ti-brand-instagram"></i> 18 Mei 2026 · Foto</span>
-        <strong>Rapat dan Arahan Internal BPAD NTT</strong>
-      </div>
-    </a>
-    <a class="gallery-card" href="https://www.instagram.com/p/DYeFeXbE3BV/" target="_blank" rel="noopener">
-      <img src="/assets/instagram-04.jpg" alt="Agenda kegiatan BPAD NTT" loading="lazy">
-      <div class="gallery-caption">
-        <span><i class="ti ti-brand-instagram"></i> 18 Mei 2026 · Foto</span>
-        <strong>Agenda Kegiatan BPAD NTT</strong>
-      </div>
-    </a>
-    <a class="gallery-card" href="https://www.instagram.com/p/DYd94qPz0Dc/" target="_blank" rel="noopener">
-      <img src="/assets/instagram-05.jpg" alt="Publikasi BPAD NTT" loading="lazy">
-      <div class="gallery-caption">
-        <span><i class="ti ti-brand-instagram"></i> 18 Mei 2026 · Foto</span>
-        <strong>Publikasi Resmi BPAD NTT</strong>
-      </div>
-    </a>
-    <a class="gallery-card" href="https://www.instagram.com/p/DYdiFe2kwZr/" target="_blank" rel="noopener">
-      <img src="/assets/instagram-06.jpg" alt="Ucapan duka cita BPAD NTT" loading="lazy">
-      <div class="gallery-caption">
-        <span><i class="ti ti-brand-instagram"></i> 18 Mei 2026 · Foto</span>
-        <strong>Keluarga Besar BPAD NTT Berduka Cita</strong>
-      </div>
-    </a>
-    <a class="gallery-card" href="https://www.instagram.com/p/DYZVHfMExaT/" target="_blank" rel="noopener">
-      <img src="/assets/instagram-07.jpg" alt="Samsat Keliling UPTD Kabupaten Kupang" loading="lazy">
-      <div class="gallery-caption">
-        <span><i class="ti ti-brand-instagram"></i> 16 Mei 2026 · Foto</span>
-        <strong>Samsat Keliling UPTD Kabupaten Kupang</strong>
-      </div>
-    </a>
-    <a class="gallery-card" href="https://www.instagram.com/p/DYZUyMrE4_s/" target="_blank" rel="noopener">
-      <img src="/assets/instagram-08.jpg" alt="Rapat tindak lanjut optimalisasi PAD" loading="lazy">
-      <div class="gallery-caption">
-        <span><i class="ti ti-brand-instagram"></i> 16 Mei 2026 · Foto</span>
-        <strong>Rapat Tindak Lanjut Optimalisasi PAD</strong>
-      </div>
-    </a>
-    <a class="gallery-card" href="https://www.instagram.com/p/DYTbl8DzfHL/" target="_blank" rel="noopener">
-      <img src="/assets/instagram-09.jpg" alt="Hari Kenaikan Yesus Kristus" loading="lazy">
-      <div class="gallery-caption">
-        <span><i class="ti ti-brand-instagram"></i> 14 Mei 2026 · Foto</span>
-        <strong>Selamat Memperingati Hari Kenaikan Yesus Kristus</strong>
-      </div>
-    </a>
-    <a class="gallery-card" href="https://www.instagram.com/p/DYN_vmVE8Yz/" target="_blank" rel="noopener">
-      <img src="/assets/instagram-10.jpg" alt="Sosialisasi Pergub NTT Nomor 13 Tahun 2025" loading="lazy">
-      <div class="gallery-caption">
-        <span><i class="ti ti-brand-instagram"></i> 12 Mei 2026 · Foto</span>
-        <strong>Informasi Pergub NTT Nomor 13 Tahun 2025</strong>
-      </div>
-    </a>
-    <a class="gallery-card is-video" href="https://www.instagram.com/reel/DYHe563C4UJ/" target="_blank" rel="noopener">
-      <img src="/assets/instagram-11.jpg" alt="Informasi pembayaran pajak kendaraan lewat SIGNAL" loading="lazy">
-      <div class="gallery-play"><i class="ti ti-player-play-filled"></i></div>
-      <div class="gallery-caption">
-        <span><i class="ti ti-brand-instagram"></i> 9 Mei 2026 · Reels</span>
-        <strong>Pembayaran Pajak Kendaraan Lewat SIGNAL</strong>
-      </div>
-    </a>
-    <a class="gallery-card is-video" href="https://www.instagram.com/reel/DYCReRcz-Ej/" target="_blank" rel="noopener">
-      <img src="/assets/instagram-12.jpg" alt="Identifikasi dan penilaian aset di Dinas Kominfo NTT" loading="lazy">
-      <div class="gallery-play"><i class="ti ti-player-play-filled"></i></div>
-      <div class="gallery-caption">
-        <span><i class="ti ti-brand-instagram"></i> 7 Mei 2026 · Reels</span>
-        <strong>Identifikasi dan Penilaian Aset Dinas Kominfo NTT</strong>
-      </div>
-    </a>
+    @endforelse
   </div>
 </section>
 

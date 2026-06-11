@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Gallery;
 use App\Models\Post;
 use App\Models\PpidDocument;
 use App\Models\WebsiteSetting;
@@ -75,6 +76,27 @@ class PublicDataController extends Controller
             ]);
 
         return response()->json($documents);
+    }
+
+    public function galleries(): JsonResponse
+    {
+        $galleries = Gallery::published()
+            ->orderBy('sort_order')
+            ->orderByDesc('created_at')
+            ->get()
+            ->map(fn (Gallery $gallery) => [
+                'id' => $gallery->id,
+                'title' => $gallery->title,
+                'caption' => $gallery->caption,
+                'image_url' => $this->fileUrl($gallery->image_path),
+                'instagram_url' => $gallery->instagram_url,
+                'media_type' => $gallery->media_type,
+                'sort_order' => $gallery->sort_order,
+                'created_at' => $gallery->created_at,
+                'updated_at' => $gallery->updated_at,
+            ]);
+
+        return response()->json($galleries);
     }
 
     private function fileUrl(?string $path): string

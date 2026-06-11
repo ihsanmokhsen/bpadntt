@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\PpidDocumentController;
 use App\Http\Controllers\Admin\WebsiteSettingController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\GalleryPublicController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PpidController;
 use App\Http\Controllers\PublicDataController;
@@ -16,12 +18,13 @@ Route::view('/layanan', 'public.layanan')->name('layanan');
 Route::get('/ppid', [PpidController::class, 'index'])->name('ppid');
 Route::view('/berita', 'public.berita')->name('berita');
 Route::view('/pengumuman', 'public.pengumuman')->name('pengumuman');
-Route::view('/galeri', 'public.galeri')->name('galeri');
+Route::get('/galeri', [GalleryPublicController::class, 'index'])->name('galeri');
 Route::get('/berita/{slug}', [HomeController::class, 'showPost'])->name('posts.show');
 
 Route::prefix('api/public')->name('api.public.')->group(function () {
     Route::get('/posts', [PublicDataController::class, 'posts'])->name('posts');
     Route::get('/settings', [PublicDataController::class, 'settings'])->name('settings');
+    Route::get('/galleries', [PublicDataController::class, 'galleries'])->name('galleries');
     Route::get('/ppid-documents', [PublicDataController::class, 'ppidDocuments'])->name('ppid-documents');
 });
 
@@ -58,5 +61,11 @@ Route::prefix('admin')->middleware(['auth', 'active-admin'])->name('admin.')->gr
     Route::get('/ppid-dokumen/{ppid_document}/edit', [PpidDocumentController::class, 'edit'])->name('ppid-documents.edit');
     Route::put('/ppid-dokumen/{ppid_document}', [PpidDocumentController::class, 'update'])->name('ppid-documents.update');
     Route::delete('/ppid-dokumen/{ppid_document}', [PpidDocumentController::class, 'destroy'])->name('ppid-documents.destroy');
+    Route::get('/galeri', [GalleryController::class, 'index'])->name('galleries.index');
+    Route::get('/galeri/tambah', [GalleryController::class, 'create'])->name('galleries.create');
+    Route::post('/galeri', [GalleryController::class, 'store'])->name('galleries.store');
+    Route::get('/galeri/{gallery}/edit', [GalleryController::class, 'edit'])->name('galleries.edit');
+    Route::put('/galeri/{gallery}', [GalleryController::class, 'update'])->name('galleries.update');
+    Route::delete('/galeri/{gallery}', [GalleryController::class, 'destroy'])->name('galleries.destroy');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

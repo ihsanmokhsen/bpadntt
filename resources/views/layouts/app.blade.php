@@ -31,6 +31,7 @@
                 <a href="{{ route('admin.settings.edit') }}">Pengaturan</a>
                 <a href="{{ route('admin.posts.index') }}">Konten</a>
                 <a href="{{ route('admin.ppid-documents.index') }}">PPID</a>
+                <a href="{{ route('admin.galleries.index') }}">Galeri</a>
                 <form method="post" action="{{ route('admin.logout') }}">
                     @csrf
                     <button type="submit">Keluar</button>
