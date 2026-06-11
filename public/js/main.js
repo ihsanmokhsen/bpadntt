@@ -602,11 +602,16 @@ function renderBerita(items) {
     const shareUrl = 'https://bpadntt.cloud' + (item.link || '/berita');
     const shareText = encodeURIComponent((item.judul || 'Berita BPAD NTT') + ' – BPAD NTT');
     const shareEnc = encodeURIComponent(shareUrl);
+    const coverImg = getNewsImageSource(item);
+    const hasRealImage = Boolean(item.gambar || item.image || item.cover_image);
+    const thumbContent = hasRealImage
+      ? `<img src="${escapeHtml(coverImg)}" alt="${escapeHtml(item.judul || '')}" class="berita-thumb-img">`
+      : `<i class="ti ${getSafeIconClass(item.ikon)}"></i>`;
     return `
     <div class="berita-card-wrap">
       <div class="berita-card">
         <div class="berita-thumb ${getThemeClass('bt', item.tema)}">
-          <i class="ti ${getSafeIconClass(item.ikon)}"></i>
+          ${thumbContent}
         </div>
         <div class="berita-body">
           <span class="berita-tag ${getThemeClass('tag-', item.tema)}">${escapeHtml(item.kategori || 'Berita')}</span>

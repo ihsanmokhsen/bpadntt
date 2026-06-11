@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260611-share1">
+  <link rel="stylesheet" href="/css/style.css?v=20260611-thumb1">
 </head>
 <body>
 @include('public.partials.header', ['active' => 'berita'])
@@ -77,8 +77,8 @@
   File ini mengatur menu mobile, dropdown Aplikasi,
   dan membaca data JSON untuk konten halaman.
 -->
-<script src="/js/public-data.js?v=20260611-share1"></script>
-<script src="/js/main.js?v=20260611-share1"></script>
+<script src="/js/public-data.js?v=20260611-thumb1"></script>
+<script src="/js/main.js?v=20260611-thumb1"></script>
 
 </body>
 </html>
