@@ -10,8 +10,7 @@ class GalleryPublicController extends Controller
     public function index(): View
     {
         $galleries = Gallery::published()
-            ->orderBy('sort_order')
-            ->orderByDesc('created_at')
+            ->orderBy('created_at')
             ->get();
 
         return view('public.galeri', [

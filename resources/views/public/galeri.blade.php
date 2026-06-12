@@ -74,13 +74,18 @@
             ? $gallery->image_path
             : \Illuminate\Support\Facades\Storage::disk('public')->url($gallery->image_path))
           : '/assets/logo.png';
-        $linkUrl = $gallery->instagram_url ?: '#';
-        $linkTarget = $gallery->instagram_url ? '_blank' : '_self';
         $isVideo = $gallery->media_type === 'video';
         $dateStr = $gallery->created_at ? $gallery->created_at->translatedFormat('j M Y') : '';
         $typeLabel = $isVideo ? 'Reels' : 'Foto';
       @endphp
-      <a class="gallery-card{{ $isVideo ? ' is-video' : '' }}" href="{{ $linkUrl }}" target="{{ $linkTarget }}" rel="{{ $linkTarget === '_blank' ? 'noopener' : '' }}">
+      <div class="gallery-card{{ $isVideo ? ' is-video' : '' }}"
+           role="button" tabindex="0"
+           data-img="{{ $imgUrl }}"
+           data-title="{{ $gallery->title }}"
+           data-caption="{{ $gallery->caption }}"
+           data-date="{{ $dateStr }}"
+           data-type="{{ $typeLabel }}"
+           data-instagram="{{ $gallery->instagram_url }}">
         <img src="{{ $imgUrl }}" alt="{{ $gallery->title }}" loading="lazy">
         @if ($isVideo)
           <div class="gallery-play"><i class="ti ti-player-play-filled"></i></div>
@@ -99,7 +104,7 @@
             <p>{{ Str::limit($gallery->caption, 80) }}</p>
           @endif
         </div>
-      </a>
+      </div>
     @empty
       <div style="grid-column:1/-1;text-align:center;padding:4rem 1rem;color:#94a3b8;">
         <i class="ti ti-photo-off" style="font-size:3rem;display:block;margin-bottom:1rem;"></i>
@@ -108,6 +113,37 @@
     @endforelse
   </div>
 </section>
+
+<!--
+  LIGHTBOX
+  Popup foto fullscreen dengan navigasi prev/next.
+-->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <div class="lightbox-overlay" id="lightboxOverlay"></div>
+  <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Tutup">
+    <i class="ti ti-x"></i>
+  </button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" type="button" aria-label="Sebelumnya">
+    <i class="ti ti-chevron-left"></i>
+  </button>
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="Berikutnya">
+    <i class="ti ti-chevron-right"></i>
+  </button>
+  <div class="lightbox-content">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-info" id="lightboxInfo">
+      <div class="lightbox-meta">
+        <span class="lightbox-date" id="lightboxDate"></span>
+        <span class="lightbox-type" id="lightboxType"></span>
+      </div>
+      <h3 class="lightbox-title" id="lightboxTitle"></h3>
+      <p class="lightbox-caption" id="lightboxCaption"></p>
+      <a class="lightbox-ig" id="lightboxIg" href="#" target="_blank" rel="noopener" style="display:none">
+        <i class="ti ti-brand-instagram"></i> Lihat di Instagram
+      </a>
+    </div>
+  </div>
+</div>
 
 @include('public.partials.contact-bar')
 @include('public.partials.footer')
@@ -119,6 +155,73 @@
 -->
 <script src="/js/public-data.js?v=20260603-dbsource1"></script>
 <script src="/js/main.js?v=20260603-dbsource1"></script>
+
+<script>
+(function () {
+  var cards = Array.from(document.querySelectorAll('.gallery-card'));
+  if (!cards.length) return;
+
+  var lb      = document.getElementById('lightbox');
+  var lbImg   = document.getElementById('lightboxImg');
+  var lbTitle = document.getElementById('lightboxTitle');
+  var lbCap   = document.getElementById('lightboxCaption');
+  var lbDate  = document.getElementById('lightboxDate');
+  var lbType  = document.getElementById('lightboxType');
+  var lbIg    = document.getElementById('lightboxIg');
+  var current = 0;
+
+  function open(idx) {
+    var c = cards[idx];
+    if (!c) return;
+    current = idx;
+    lbImg.src = c.dataset.img;
+    lbImg.alt = c.dataset.title || '';
+    lbTitle.textContent = c.dataset.title || '';
+    lbCap.textContent = c.dataset.caption || '';
+    lbDate.textContent = c.dataset.date || '';
+    lbType.textContent = c.dataset.type || '';
+    if (c.dataset.instagram) {
+      lbIg.href = c.dataset.instagram;
+      lbIg.style.display = '';
+    } else {
+      lbIg.style.display = 'none';
+    }
+    lb.classList.add('is-open');
+    lb.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function close() {
+    lb.classList.remove('is-open');
+    lb.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  function nav(dir) {
+    var next = (current + dir + cards.length) % cards.length;
+    open(next);
+  }
+
+  cards.forEach(function (card, i) {
+    card.addEventListener('click', function () { open(i); });
+    card.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i); }
+    });
+  });
+
+  document.getElementById('lightboxClose').addEventListener('click', close);
+  document.getElementById('lightboxOverlay').addEventListener('click', close);
+  document.getElementById('lightboxPrev').addEventListener('click', function () { nav(-1); });
+  document.getElementById('lightboxNext').addEventListener('click', function () { nav(1); });
+
+  document.addEventListener('keydown', function (e) {
+    if (!lb.classList.contains('is-open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') nav(-1);
+    if (e.key === 'ArrowRight') nav(1);
+  });
+})();
+</script>
 
 </body>
 </html>

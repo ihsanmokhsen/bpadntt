@@ -37,8 +37,6 @@
 @php
   $heroTitle = ($settings ?? collect())->get('hero.title', 'Optimalisasi Pendapatan Daerah & Pengelolaan Aset');
   $heroDescription = ($settings ?? collect())->get('hero.description', '“Pendapatan Terjaga, Aset Tertata” menjadi komitmen utama BPAD Provinsi Nusa Tenggara Timur dalam mewujudkan tata kelola keuangan daerah yang transparan, akuntabel, dan berkelanjutan.');
-  $heroBadgeImage = ($settings ?? collect())->get('hero.badge.image', '/assets/ayobangunntt.png');
-  $heroBadgeAlt = ($settings ?? collect())->get('hero.badge.alt', 'Ayo Bangun NTT');
   $heroSlides = [
     ($settings ?? collect())->get('hero.slide.2', '/assets/herox.jpeg'),
     ($settings ?? collect())->get('hero.slide.4', '/assets/heroy.jpeg'),
@@ -56,9 +54,6 @@
   <div class="hero-deco2"></div>
   <div class="hero-deco3"></div>
   <div class="hero-inner">
-    <div class="hero-badge">
-      <img src="{{ $heroBadgeImage }}" alt="{{ $heroBadgeAlt }}">
-    </div>
     <h2>{{ $heroTitle }}</h2>
     <p>{{ $heroDescription }}</p>
     <div class="hero-btns">

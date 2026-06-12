@@ -61,12 +61,6 @@
             <small>Format: JPG, PNG, WebP. Maksimal 5 MB.</small>
         </label>
 
-        <label>
-            <span>Urutan Tampil</span>
-            <input name="sort_order" type="number" value="{{ old('sort_order', $gallery->sort_order) }}" min="0" max="9999">
-            <small>Angka lebih kecil ditampilkan lebih dahulu. Gunakan 0 jika tidak membutuhkan urutan khusus.</small>
-        </label>
-
         <label class="inline-check">
             <input name="is_published" type="checkbox" value="1" @checked(old('is_published', $gallery->is_published))>
             <span>Dipublikasi di halaman Galeri</span>

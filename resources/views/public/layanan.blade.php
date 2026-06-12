@@ -69,46 +69,91 @@
       <div class="layanan-icon ic-blue"><i class="ti ti-car"></i></div>
       <div class="layanan-name">Pajak Kendaraan Bermotor</div>
       <div class="layanan-desc">Pembayaran & perpanjangan STNK kendaraan bermotor roda dua dan empat</div>
+      <ul class="layanan-detail">
+        <li>Pelayanan di kantor Samsat dan UPTD terdekat</li>
+        <li>Perpanjangan STNK tahunan &amp; 5 tahunan</li>
+        <li>Pengecekan status pajak kendaraan online</li>
+      </ul>
     </div>
     <div class="layanan-card">
       <div class="layanan-icon ic-amber"><i class="ti ti-file-invoice"></i></div>
       <div class="layanan-name">BBNKB</div>
       <div class="layanan-desc">Bea Balik Nama Kendaraan Bermotor untuk perpindahan kepemilikan</div>
+      <ul class="layanan-detail">
+        <li>Mutasi kendaraan antar daerah</li>
+        <li>Proses balik nama dari jual beli atau warisan</li>
+        <li>Penerbitan BPKB baru atas nama pemilik baru</li>
+      </ul>
     </div>
     <div class="layanan-card">
       <div class="layanan-icon ic-teal"><i class="ti ti-droplet"></i></div>
       <div class="layanan-name">Pajak Air Permukaan</div>
       <div class="layanan-desc">Pengelolaan pajak atas pengambilan dan pemanfaatan air permukaan</div>
+      <ul class="layanan-detail">
+        <li>Pendaftaran dan pendataan wajib pajak air</li>
+        <li>Penghitungan tarif berdasarkan volume pengambilan</li>
+        <li>Pengawasan dan pelaporan pemanfaatan air</li>
+      </ul>
     </div>
     <div class="layanan-card">
       <div class="layanan-icon ic-red"><i class="ti ti-report"></i></div>
       <div class="layanan-name">Pajak Rokok</div>
       <div class="layanan-desc">Administrasi dan pengelolaan pajak rokok daerah sesuai peraturan</div>
+      <ul class="layanan-detail">
+        <li>Pendataan distributor dan agen rokok</li>
+        <li>Pemungutan dan penyetoran pajak rokok</li>
+        <li>Pembagian hasil pajak ke kabupaten/kota</li>
+      </ul>
     </div>
     <div class="layanan-card">
       <div class="layanan-icon ic-purple"><i class="ti ti-building"></i></div>
       <div class="layanan-name">Pengelolaan Aset Daerah</div>
       <div class="layanan-desc">Inventarisasi, pemanfaatan, dan penatausahaan aset milik daerah</div>
+      <ul class="layanan-detail">
+        <li>Pencatatan dan inventarisasi barang milik daerah</li>
+        <li>Sewa, pinjam pakai, dan kerja sama pemanfaatan aset</li>
+        <li>Penghapusan dan pemindahtanganan aset</li>
+      </ul>
     </div>
     <div class="layanan-card">
       <div class="layanan-icon ic-green"><i class="ti ti-device-mobile"></i></div>
       <div class="layanan-name">e-Samsat Online</div>
       <div class="layanan-desc">Pembayaran pajak kendaraan bermotor secara online melalui aplikasi</div>
+      <ul class="layanan-detail">
+        <li>Bayar pajak kendaraan dari mana saja</li>
+        <li>Integrasi dengan layanan perbankan dan e-wallet</li>
+        <li>Cetak e-TBPKB tanpa perlu antre di kantor</li>
+      </ul>
     </div>
     <div class="layanan-card">
       <div class="layanan-icon ic-navy"><i class="ti ti-certificate"></i></div>
       <div class="layanan-name">NPWPD</div>
       <div class="layanan-desc">Penerbitan Nomor Pokok Wajib Pajak Daerah bagi wajib pajak baru</div>
+      <ul class="layanan-detail">
+        <li>Pendaftaran wajib pajak daerah baru</li>
+        <li>Verifikasi data usaha dan domisili</li>
+        <li>Penerbitan kartu NPWPD secara cepat</li>
+      </ul>
     </div>
     <div class="layanan-card">
       <div class="layanan-icon ic-pink"><i class="ti ti-receipt"></i></div>
       <div class="layanan-name">Retribusi Daerah</div>
       <div class="layanan-desc">Pengelolaan retribusi jasa umum dan jasa usaha milik pemerintah daerah</div>
+      <ul class="layanan-detail">
+        <li>Retribusi pemakaian kekayaan daerah</li>
+        <li>Retribusi jasa umum dan jasa usaha</li>
+        <li>Penagihan dan pelaporan retribusi berkala</li>
+      </ul>
     </div>
     <div class="layanan-card">
       <div class="layanan-icon ic-amber"><i class="ti ti-headset"></i></div>
       <div class="layanan-name">Konsultasi Pajak</div>
       <div class="layanan-desc">Layanan konsultasi dan informasi perpajakan daerah bagi masyarakat</div>
+      <ul class="layanan-detail">
+        <li>Konsultasi tatap muka di kantor pelayanan</li>
+        <li>Layanan informasi melalui telepon dan media sosial</li>
+        <li>Sosialisasi peraturan pajak terbaru</li>
+      </ul>
     </div>
   </div>
 </section>

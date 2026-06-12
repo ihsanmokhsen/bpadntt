@@ -58,8 +58,17 @@
                                         placeholder="{{ $field['placeholder'] }}"
                                         @if ($field['type'] === 'number')
                                             inputmode="numeric"
+                                            step="any"
+                                        @endif
+                                        @if (!empty($field['format']))
+                                            data-format="{{ $field['format'] }}"
                                         @endif
                                     >
+                                    @if (!empty($field['format']) && $field['format'] === 'currency')
+                                        <span class="currency-preview" data-for="{{ $field['name'] }}">Rp 0</span>
+                                    @elseif (!empty($field['format']) && $field['format'] === 'percent')
+                                        <span class="currency-preview" data-for="{{ $field['name'] }}">0%</span>
+                                    @endif
                                     <small>{{ $field['help'] }}</small>
                                 </label>
                             @endforeach
@@ -79,4 +88,38 @@
             @csrf
         </form>
     </section>
+
+    <script>
+    (function () {
+        function formatRupiah(num) {
+            if (!num || isNaN(num)) return 'Rp 0';
+            var abs = Math.abs(num);
+            if (abs >= 1e12) return 'Rp ' + (num / 1e12).toFixed(2).replace('.', ',') + ' T';
+            if (abs >= 1e9) return 'Rp ' + (num / 1e9).toFixed(2).replace('.', ',') + ' M';
+            if (abs >= 1e6) return 'Rp ' + (num / 1e6).toFixed(2).replace('.', ',') + ' Jt';
+            return 'Rp ' + num.toLocaleString('id-ID');
+        }
+
+        function formatPercent(num) {
+            if (!num || isNaN(num)) return '0%';
+            return num.toLocaleString('id-ID', {maximumFractionDigits: 2}) + '%';
+        }
+
+        function updatePreview(input) {
+            var fmt = input.dataset.format;
+            var name = input.name;
+            var preview = document.querySelector('.currency-preview[data-for="' + name + '"]');
+            if (!preview) return;
+            var val = parseFloat(input.value);
+            if (fmt === 'currency') preview.textContent = formatRupiah(val);
+            else if (fmt === 'percent') preview.textContent = formatPercent(val);
+        }
+
+        document.querySelectorAll('input[data-format]').forEach(function (input) {
+            updatePreview(input);
+            input.addEventListener('input', function () { updatePreview(input); });
+            input.addEventListener('change', function () { updatePreview(input); });
+        });
+    })();
+    </script>
 @endsection

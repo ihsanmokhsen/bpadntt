@@ -33,7 +33,6 @@ class GalleryRequest extends FormRequest
             'instagram_url' => ['nullable', 'url:http,https', 'max:2000'],
             'media_type' => ['required', Rule::in(['photo', 'video'])],
             'is_published' => ['nullable', 'boolean'],
-            'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'remove_image' => ['nullable', 'boolean'],
         ];
     }

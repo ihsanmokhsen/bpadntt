@@ -24,8 +24,7 @@ class GalleryController extends Controller
                     ->orWhere('caption', 'like', "%{$search}%");
             }))
             ->when(in_array($status, ['published', 'draft'], true), fn ($query) => $query->where('is_published', $status === 'published'))
-            ->orderBy('sort_order')
-            ->orderByDesc('created_at')
+            ->orderBy('created_at')
             ->paginate(20)
             ->withQueryString();
 
@@ -38,7 +37,6 @@ class GalleryController extends Controller
             'gallery' => new Gallery([
                 'media_type' => 'photo',
                 'is_published' => true,
-                'sort_order' => 0,
             ]),
         ]);
     }
@@ -96,7 +94,6 @@ class GalleryController extends Controller
             'caption',
             'instagram_url',
             'media_type',
-            'sort_order',
         ]);
 
         $imagePath = $gallery?->image_path;
@@ -116,7 +113,6 @@ class GalleryController extends Controller
 
         $data['image_path'] = $imagePath;
         $data['is_published'] = $request->boolean('is_published');
-        $data['sort_order'] = $data['sort_order'] ?? 0;
 
         return $data;
     }

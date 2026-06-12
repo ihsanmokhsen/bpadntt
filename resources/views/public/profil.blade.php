@@ -53,6 +53,29 @@
 </section>
 
 <!--
+  SAMBUTAN KEPALA BPAD
+  Pesan sambutan dari Kepala Badan dengan foto resmi.
+-->
+<section class="sambutan-section">
+  <div class="sambutan-card">
+    <div class="sambutan-photo">
+      <img src="/assets/pimpinan/johni-ataupah.png" alt="Johny Ericson Ataupah, SP. MM – Kepala BPAD NTT">
+    </div>
+    <div class="sambutan-body">
+      <div class="sambutan-kicker"><i class="ti ti-quote"></i> Sambutan Kepala BPAD</div>
+      <h2>Sambutan Kepala BPAD Provinsi Nusa Tenggara Timur</h2>
+      <p>Puji syukur ke hadirat Tuhan Yang Maha Esa. Selamat datang di website resmi Badan Pendapatan dan Aset Daerah (BPAD) Provinsi Nusa Tenggara Timur. Website ini kami hadirkan sebagai sarana informasi, komunikasi, dan pelayanan publik yang transparan, akuntabel, serta mudah diakses oleh masyarakat.</p>
+      <p>Melalui platform ini, kami berkomitmen untuk menyajikan informasi terkait pendapatan daerah, pengelolaan aset daerah, serta berbagai program dan kegiatan BPAD guna mendukung tata kelola pemerintahan yang baik dan peningkatan pelayanan kepada masyarakat Nusa Tenggara Timur.</p>
+      <p>Kami berharap website ini dapat menjadi jembatan yang mempererat kolaborasi antara pemerintah dan masyarakat dalam mewujudkan NTT yang maju, mandiri, dan sejahtera.</p>
+      <div class="sambutan-sign">
+        <strong>Johny Ericson Ataupah, SP. MM</strong>
+        <span>Kepala BPAD Provinsi Nusa Tenggara Timur</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--
   PROFIL: VISI MISI
   Bagian awal profil instansi.
 -->
@@ -117,6 +140,9 @@
 
   <div class="struktur-wrap">
     <div class="section-title small-title">C. Struktur Organisasi</div>
+    <div class="struktur-bagan">
+      <img src="/assets/struktur-organisasi.png" alt="Bagan Struktur Organisasi BPAD NTT">
+    </div>
     <div class="struktur-grid">
       <div class="detail-card">
         <div class="detail-label">1. Unsur Pimpinan</div>
@@ -161,30 +187,50 @@
     </div>
   </div>
 
-  <div class="history-grid">
-    <div class="detail-card">
-      <div class="detail-label">Riwayat Pimpinan</div>
-      <h3>Kepala Dinas dari Tahun ke Tahun</h3>
-      <ol class="history-list">
-        <li>Piet A Tallo - Kepala Dinas Penda Tk.I NTT (15-03-1974 s/d 12-09-1983)</li>
-        <li>Drs. Joachim Reo (1983-1988)</li>
-        <li>Alo Jong Joko (1988-1993)</li>
-        <li>Joachim Reo (1993-1999)</li>
-        <li>Drs. Gaspar Parang Ehok (1999-2002)</li>
-        <li>Drs. Alex Babies (2002-2007)</li>
-        <li>L O Wila Huky (2007-2008)</li>
-        <li>Plt. Welly Katipana (2008, masa transisi)</li>
-        <li>Frans Salem (2008-2010)</li>
-        <li>Emanuel Kara (2010-2014)</li>
-        <li>Obaldus Toda - Dispenda (2014-2017)</li>
-        <li>Hali Lanan Elias - BPPKAD (2017-2019)</li>
-        <li>Zet Libing - BPAD (2019-2021)</li>
-        <li>Alexon Lumba - BPAD (2022-2026)</li>
-        <li>Johny Ericson Ataupah, SP. MM - BPAD (2026-sekarang)</li>
-      </ol>
+  <div class="pimpinan-section">
+    <div class="detail-label">Riwayat Pimpinan</div>
+    <h3 class="pimpinan-title">Kepala Dinas dari Tahun ke Tahun</h3>
+    <div class="pimpinan-grid">
+      @php
+        $pimpinan = [
+          ['name' => 'Piet A Tallo', 'role' => 'Kepala Dinas Penda Tk.I NTT', 'period' => '1974 – 1983', 'photo' => '/assets/pimpinan/piet-tallo.jpeg'],
+          ['name' => 'Drs. Joachim Reo', 'role' => 'Kepala Dinas', 'period' => '1983 – 1988', 'photo' => '/assets/pimpinan/joachim-reo.jpeg'],
+          ['name' => 'Alo Jong Joko', 'role' => 'Kepala Dinas', 'period' => '1988 – 1993', 'photo' => '/assets/pimpinan/alo-joko.jpeg'],
+          ['name' => 'Joachim Reo', 'role' => 'Kepala Dinas', 'period' => '1993 – 1999', 'photo' => '/assets/pimpinan/joachim-reo2.jpeg'],
+          ['name' => 'Drs. Gaspar Parang Ehok', 'role' => 'Kepala Dinas', 'period' => '1999 – 2002', 'photo' => '/assets/pimpinan/gaspar-ehok.jpeg'],
+          ['name' => 'Drs. Alex Babies', 'role' => 'Kepala Dinas', 'period' => '2002 – 2007', 'photo' => '/assets/pimpinan/alex-babies.jpeg'],
+          ['name' => 'L O Wila Huky', 'role' => 'Kepala Dinas', 'period' => '2007 – 2008', 'photo' => '/assets/pimpinan/wila-huky.jpeg'],
+          ['name' => 'Plt. Welly Katipana', 'role' => 'Masa Transisi', 'period' => '2008', 'photo' => null],
+          ['name' => 'Frans Salem', 'role' => 'Kepala Dinas', 'period' => '2008 – 2010', 'photo' => '/assets/pimpinan/frans-salem.jpeg'],
+          ['name' => 'Emanuel Kara', 'role' => 'Kepala Dinas', 'period' => '2010 – 2014', 'photo' => '/assets/pimpinan/eman-kara.jpeg'],
+          ['name' => 'Obaldus Toda', 'role' => 'Dispenda', 'period' => '2014 – 2017', 'photo' => '/assets/pimpinan/olbaldus-toda.jpeg'],
+          ['name' => 'Hali Lanan Elias', 'role' => 'BPPKAD', 'period' => '2017 – 2019', 'photo' => '/assets/pimpinan/hali-lanan.jpeg'],
+          ['name' => 'Zet Libing', 'role' => 'BPAD', 'period' => '2019 – 2021', 'photo' => '/assets/pimpinan/sony-libing.jpeg'],
+          ['name' => 'Alexon Lumba', 'role' => 'BPAD', 'period' => '2022 – 2026', 'photo' => '/assets/pimpinan/alexon-lumba.png'],
+          ['name' => 'Johny Ericson Ataupah, SP. MM', 'role' => 'BPAD', 'period' => '2026 – sekarang', 'photo' => '/assets/pimpinan/johni-ataupah.png'],
+        ];
+      @endphp
+      @foreach ($pimpinan as $p)
+        <div class="pimpinan-card">
+          <div class="pimpinan-photo">
+            @if ($p['photo'])
+              <img src="{{ $p['photo'] }}" alt="{{ $p['name'] }}">
+            @else
+              <div class="pimpinan-photo-placeholder"><i class="ti ti-user"></i></div>
+            @endif
+          </div>
+          <div class="pimpinan-info">
+            <strong>{{ $p['name'] }}</strong>
+            <span class="pimpinan-role">{{ $p['role'] }}</span>
+            <span class="pimpinan-period">{{ $p['period'] }}</span>
+          </div>
+        </div>
+      @endforeach
     </div>
-    <div class="detail-card">
-      <div class="detail-label">Sebaran Layanan</div>
+  </div>
+
+  <div class="detail-card">
+    <div class="detail-label">Sebaran Layanan</div>
       <h3>UPTD di NTT (Kabupaten/Kota)</h3>
       <div class="uptd-table-wrap">
         <table class="uptd-table">
@@ -223,7 +269,6 @@
       <button class="uptd-toggle" type="button" onclick="toggleUptdRows(this)" aria-expanded="false">
         Lihat semua UPTD
       </button>
-    </div>
   </div>
 </section>
 

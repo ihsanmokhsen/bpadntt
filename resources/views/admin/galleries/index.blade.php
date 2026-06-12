@@ -19,7 +19,6 @@
                 'Upload gambar langsung dari komputer untuk menyimpannya di server BPAD.',
                 'Atau isi URL Gambar untuk menggunakan gambar yang sudah ada di /assets/ atau URL eksternal.',
                 'Tautan Instagram bersifat opsional, digunakan untuk mengarahkan pengunjung ke postingan Instagram asli.',
-                'Urutan Tampil mengatur urutan foto di halaman publik (angka lebih kecil tampil lebih dulu).',
             ],
         ])
 
@@ -47,7 +46,7 @@
                         <th style="width:60px">Foto</th>
                         <th>Judul</th>
                         <th>Tipe</th>
-                        <th>Urutan</th>
+                        <th>Tanggal</th>
                         <th>Status</th>
                         <th>Aksi</th>
                     </tr>
@@ -78,7 +77,7 @@
                                     {{ ucfirst($gallery->media_type) }}
                                 </span>
                             </td>
-                            <td>{{ $gallery->sort_order }}</td>
+                            <td>{{ $gallery->created_at->format('d/m/Y') }}</td>
                             <td>
                                 <span class="content-status content-status-{{ $gallery->is_published ? 'published' : 'draft' }}">
                                     {{ $gallery->is_published ? 'Dipublikasi' : 'Draft' }}

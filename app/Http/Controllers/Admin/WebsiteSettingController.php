@@ -113,27 +113,27 @@ class WebsiteSettingController extends Controller
             [
                 'title' => 'Hero / Banner',
                 'description' => 'Judul, deskripsi, badge, dan gambar slider untuk banner halaman depan.',
-                'fields' => array_slice($this->fieldDefinitions(), 4, 8),
+                'fields' => array_slice($this->fieldDefinitions(), 4, 6),
             ],
             [
                 'title' => 'Data PAD',
                 'description' => 'Nilai dan status PAD yang tampil sebelum hero pada halaman publik.',
-                'fields' => array_slice($this->fieldDefinitions(), 12, 5),
+                'fields' => array_slice($this->fieldDefinitions(), 10, 5),
             ],
             [
                 'title' => 'Kontak Resmi',
                 'description' => 'Email, nomor telepon, alamat kantor, dan jam layanan publik.',
-                'fields' => array_slice($this->fieldDefinitions(), 17, 5),
+                'fields' => array_slice($this->fieldDefinitions(), 15, 5),
             ],
             [
                 'title' => 'Media Sosial',
                 'description' => 'Tautan sosial media resmi yang bisa ditampilkan pada halaman publik.',
-                'fields' => array_slice($this->fieldDefinitions(), 17, 4),
+                'fields' => array_slice($this->fieldDefinitions(), 15, 4),
             ],
             [
                 'title' => 'Form PPID',
                 'description' => 'Tautan Google Form untuk permohonan informasi dan keberatan PPID.',
-                'fields' => array_slice($this->fieldDefinitions(), 21, 2),
+                'fields' => array_slice($this->fieldDefinitions(), 19, 2),
             ],
         ];
     }
@@ -143,7 +143,13 @@ class WebsiteSettingController extends Controller
         $values = [];
 
         foreach ($this->fieldDefinitions() as $field) {
-            $values[$field['name']] = $settings->get($field['setting_key'])?->value;
+            $raw = $settings->get($field['setting_key'])?->value;
+            // For numeric fields, only pass through valid numbers
+            if (($field['format'] ?? null) === 'currency' || ($field['format'] ?? null) === 'percent') {
+                $values[$field['name']] = is_numeric($raw) ? $raw : null;
+            } else {
+                $values[$field['name']] = $raw;
+            }
         }
 
         return $values;
@@ -256,31 +262,34 @@ class WebsiteSettingController extends Controller
                 'name' => 'pad_realisasi_value',
                 'setting_key' => 'pad.realisasi.value',
                 'group_name' => 'pad',
-                'label' => 'Realisasi PAD',
-                'type' => 'text',
-                'placeholder' => 'Rp --',
-                'help' => 'Nilai realisasi PAD yang tampil di bar status.',
+                'label' => 'Realisasi PAD (angka saja)',
+                'type' => 'number',
+                'placeholder' => '150000000000',
+                'help' => 'Ketik angka tanpa titik atau koma. Format Rupiah akan muncul otomatis.',
                 'is_public' => true,
+                'format' => 'currency',
             ],
             [
                 'name' => 'pad_target_text',
                 'setting_key' => 'pad.target_text',
                 'group_name' => 'pad',
-                'label' => 'Target 2026',
-                'type' => 'text',
-                'placeholder' => 'Rp 2,8T',
-                'help' => 'Target PAD 2026 yang tampil di bar status.',
+                'label' => 'Target PAD 2026 (angka saja)',
+                'type' => 'number',
+                'placeholder' => '2800000000000',
+                'help' => 'Ketik angka tanpa titik atau koma. Format Rupiah akan muncul otomatis.',
                 'is_public' => true,
+                'format' => 'currency',
             ],
             [
                 'name' => 'pad_percentage',
                 'setting_key' => 'pad.percentage',
                 'group_name' => 'pad',
-                'label' => 'Persentase Realisasi',
-                'type' => 'text',
-                'placeholder' => '--%',
-                'help' => 'Persentase pencapaian PAD yang tampil di bar status.',
+                'label' => 'Persentase Realisasi (angka saja)',
+                'type' => 'number',
+                'placeholder' => '5.36',
+                'help' => 'Ketik angka persen tanpa tanda %. Contoh: 5.36 untuk 5,36%.',
                 'is_public' => true,
+                'format' => 'percent',
             ],
             [
                 'name' => 'pad_updated_at',

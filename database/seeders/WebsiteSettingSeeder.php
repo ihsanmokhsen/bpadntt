@@ -20,9 +20,9 @@ class WebsiteSettingSeeder extends Seeder
             ['key' => 'hero.badge.alt', 'value' => 'Ayo Bangun NTT', 'group_name' => 'hero'],
             ['key' => 'hero.slide.2', 'value' => '/assets/herox.jpeg', 'group_name' => 'hero'],
             ['key' => 'hero.slide.4', 'value' => '/assets/heroy.jpeg', 'group_name' => 'hero'],
-            ['key' => 'pad.realisasi.value', 'value' => 'Rp --', 'group_name' => 'pad'],
-            ['key' => 'pad.target_text', 'value' => 'Rp 2,8T', 'group_name' => 'pad'],
-            ['key' => 'pad.percentage', 'value' => '--%', 'group_name' => 'pad'],
+            ['key' => 'pad.realisasi.value', 'value' => null, 'group_name' => 'pad'],
+            ['key' => 'pad.target_text', 'value' => '2800000000000', 'group_name' => 'pad'],
+            ['key' => 'pad.percentage', 'value' => null, 'group_name' => 'pad'],
             ['key' => 'pad.updated_at', 'value' => 'Update 10 Juni 2026', 'group_name' => 'pad'],
             ['key' => 'pad.status', 'value' => 'Menunggu data resmi', 'group_name' => 'pad'],
             ['key' => 'contact.email', 'value' => 'bapenda@nttprov.go.id', 'group_name' => 'contact'],
@@ -35,6 +35,11 @@ class WebsiteSettingSeeder extends Seeder
         ];
 
         foreach ($settings as $setting) {
+            $existing = WebsiteSetting::where('key', $setting['key'])->first();
+            // Preserve existing PAD numeric values (don't overwrite real data with null)
+            if ($existing && in_array($setting['key'], ['pad.realisasi.value', 'pad.percentage']) && $setting['value'] === null) {
+                continue;
+            }
             WebsiteSetting::updateOrCreate(
                 ['key' => $setting['key']],
                 [...$setting, 'is_public' => true],

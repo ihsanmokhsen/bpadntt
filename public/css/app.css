@@ -521,6 +521,18 @@ td {
     line-height: 1.45;
 }
 
+.currency-preview {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold, #c8973a);
+    background: rgba(200, 151, 58, .08);
+    border: 1px solid rgba(200, 151, 58, .18);
+    padding: 3px 10px;
+    border-radius: 6px;
+    letter-spacing: .02em;
+}
+
 .form-sidebar {
     position: sticky;
     top: 18px;
