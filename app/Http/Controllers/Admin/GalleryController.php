@@ -24,7 +24,7 @@ class GalleryController extends Controller
                     ->orWhere('caption', 'like', "%{$search}%");
             }))
             ->when(in_array($status, ['published', 'draft'], true), fn ($query) => $query->where('is_published', $status === 'published'))
-            ->orderBy('created_at')
+            ->orderByDesc('created_at')
             ->paginate(20)
             ->withQueryString();
 
