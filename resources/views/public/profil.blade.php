@@ -59,7 +59,7 @@
 <section class="sambutan-section">
   <div class="sambutan-card">
     <div class="sambutan-photo">
-      <img src="/assets/pimpinan/johni-ataupah.png" alt="Johny Ericson Ataupah, SP. MM – Kepala BPAD NTT">
+      <img src="/assets/pimpinan/johni-ataupah.jpeg" alt="Johny Ericson Ataupah, SP. MM – Kepala BPAD NTT">
     </div>
     <div class="sambutan-body">
       <div class="sambutan-kicker"><i class="ti ti-quote"></i> Sambutan Kepala BPAD</div>
@@ -206,8 +206,8 @@
           ['name' => 'Obaldus Toda', 'role' => 'Dispenda', 'period' => '2014 – 2017', 'photo' => '/assets/pimpinan/olbaldus-toda.jpeg'],
           ['name' => 'Hali Lanan Elias', 'role' => 'BPPKAD', 'period' => '2017 – 2019', 'photo' => '/assets/pimpinan/hali-lanan.jpeg'],
           ['name' => 'Zet Libing', 'role' => 'BPAD', 'period' => '2019 – 2021', 'photo' => '/assets/pimpinan/sony-libing.jpeg'],
-          ['name' => 'Alexon Lumba', 'role' => 'BPAD', 'period' => '2022 – 2026', 'photo' => '/assets/pimpinan/alexon-lumba.png'],
-          ['name' => 'Johny Ericson Ataupah, SP. MM', 'role' => 'BPAD', 'period' => '2026 – sekarang', 'photo' => '/assets/pimpinan/johni-ataupah.png'],
+          ['name' => 'Alexon Lumba', 'role' => 'BPAD', 'period' => '2022 – 2026', 'photo' => '/assets/pimpinan/alexon-lumba.jpeg'],
+          ['name' => 'Johny Ericson Ataupah, SP. MM', 'role' => 'BPAD', 'period' => '2026 – sekarang', 'photo' => '/assets/pimpinan/johni-ataupah.jpeg'],
         ];
       @endphp
       @foreach ($pimpinan as $p)
